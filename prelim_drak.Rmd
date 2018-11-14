@@ -1,0 +1,13 @@
+---
+title: "prelim drak"
+author: "Tatini Mal-Sarkar"
+date: "11/14/2018"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(lavaan)
+library(semPlot)
+```
