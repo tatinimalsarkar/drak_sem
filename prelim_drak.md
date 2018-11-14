@@ -44,8 +44,155 @@ drak = read_csv("./data/KerryDataRequestV2_visit1_c.csv") %>%
     ## See spec(...) for full column specifications.
 
 ``` r
-#step 1
-med.mod <- 'pov =~ SESaQ13_1 + SESaQ14 + SESaQ15_1 + SESaQ20_1 + SESaQ21 + SESaQ31_1 + SESaQ32 + SESaQ34_1 + sumses9 + sumses33
+nomed_mod <- 'pov =~ SESaQ13_1 + SESaQ14 + SESaQ15_1 + SESaQ20_1 + SESaQ21 + SESaQ31_1 + SESaQ32 + SESaQ34_1 + sumses9 + sumses33
+depf1 =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21
+depf2 =~ bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1
+
+depf1 ~ pov
+depf2 ~ pov '
+
+nomed_mod_fit_1 <- sem(nomed_mod, data = drak, missing = 'fiml.x')
+nomed_mod_fit_sum_1 = summary(nomed_mod_fit_1)
+```
+
+    ## lavaan 0.6-3 ended normally after 91 iterations
+    ## 
+    ##   Optimization method                           NLMINB
+    ##   Number of free parameters                         90
+    ## 
+    ##   Number of observations                          1036
+    ##   Number of missing patterns                        25
+    ## 
+    ##   Estimator                                         ML
+    ##   Model Fit Test Statistic                    2194.900
+    ##   Degrees of freedom                               374
+    ##   P-value (Chi-square)                           0.000
+    ## 
+    ## Parameter Estimates:
+    ## 
+    ##   Information                                 Observed
+    ##   Observed information based on                Hessian
+    ##   Standard Errors                             Standard
+    ## 
+    ## Latent Variables:
+    ##                    Estimate  Std.Err  z-value  P(>|z|)
+    ##   pov =~                                              
+    ##     SESaQ13_1         1.000                           
+    ##     SESaQ14          -0.382    0.061   -6.215    0.000
+    ##     SESaQ15_1         0.521    0.133    3.923    0.000
+    ##     SESaQ20_1         0.386    0.064    5.989    0.000
+    ##     SESaQ21           0.292    0.049    5.915    0.000
+    ##     SESaQ31_1        -1.844    0.126  -14.669    0.000
+    ##     SESaQ32          -0.560    0.098   -5.738    0.000
+    ##     SESaQ34_1         0.388    0.050    7.832    0.000
+    ##     sumses9          -0.857    0.078  -11.030    0.000
+    ##     sumses33         -2.793    0.201  -13.872    0.000
+    ##   depf1 =~                                            
+    ##     bdiq2             1.000                           
+    ##     bdiq3             1.099    0.067   16.442    0.000
+    ##     bdiq4             1.311    0.075   17.515    0.000
+    ##     bdiq5             0.924    0.059   15.723    0.000
+    ##     bdiq6             1.346    0.080   16.815    0.000
+    ##     bdiq7             1.138    0.068   16.859    0.000
+    ##     bdiq8             1.480    0.087   17.077    0.000
+    ##     bdiq10            1.273    0.088   14.459    0.000
+    ##     bdiq12            1.164    0.070   16.654    0.000
+    ##     bdiq13            1.265    0.073   17.210    0.000
+    ##     bdiq14            1.125    0.065   17.437    0.000
+    ##     bdiq15            1.097    0.069   16.018    0.000
+    ##     bdiq17            0.965    0.068   14.160    0.000
+    ##     bdiq20            1.060    0.072   14.680    0.000
+    ##     bdiq21            1.057    0.087   12.144    0.000
+    ##   depf2 =~                                            
+    ##     bdiq22_1          1.000                           
+    ##     bdiq23_1          0.734    0.054   13.486    0.000
+    ##     bdiq24_1          0.729    0.049   14.731    0.000
+    ##     bdiq25_1          0.491    0.044   11.205    0.000
+    ## 
+    ## Regressions:
+    ##                    Estimate  Std.Err  z-value  P(>|z|)
+    ##   depf1 ~                                             
+    ##     pov               0.016    0.032    0.481    0.631
+    ##   depf2 ~                                             
+    ##     pov              -0.045    0.017   -2.686    0.007
+    ## 
+    ## Covariances:
+    ##                    Estimate  Std.Err  z-value  P(>|z|)
+    ##  .depf1 ~~                                            
+    ##    .depf2             0.026    0.004    7.240    0.000
+    ## 
+    ## Intercepts:
+    ##                    Estimate  Std.Err  z-value  P(>|z|)
+    ##    .SESaQ13_1         1.725    0.029   59.069    0.000
+    ##    .SESaQ14           4.356    0.024  180.460    0.000
+    ##    .SESaQ15_1         3.295    0.055   59.451    0.000
+    ##    .SESaQ20_1         1.627    0.026   63.027    0.000
+    ##    .SESaQ21           0.442    0.020   22.420    0.000
+    ##    .SESaQ31_1         2.560    0.033   77.346    0.000
+    ##    .SESaQ32           2.434    0.040   61.176    0.000
+    ##    .SESaQ34_1         1.748    0.019   89.883    0.000
+    ##    .sumses9           2.232    0.028   79.775    0.000
+    ##    .sumses33          4.779    0.055   86.904    0.000
+    ##    .bdiq2             0.357    0.022   16.501    0.000
+    ##    .bdiq3             0.405    0.023   17.281    0.000
+    ##    .bdiq4             0.588    0.025   23.376    0.000
+    ##    .bdiq5             0.404    0.020   19.859    0.000
+    ##    .bdiq6             0.457    0.027   16.822    0.000
+    ##    .bdiq7             0.378    0.023   16.418    0.000
+    ##    .bdiq8             0.525    0.029   17.876    0.000
+    ##    .bdiq10            0.582    0.031   18.758    0.000
+    ##    .bdiq12            0.500    0.024   21.106    0.000
+    ##    .bdiq13            0.490    0.025   19.867    0.000
+    ##    .bdiq14            0.333    0.022   15.261    0.000
+    ##    .bdiq15            0.585    0.023   25.001    0.000
+    ##    .bdiq17            0.618    0.024   25.667    0.000
+    ##    .bdiq20            0.690    0.025   27.352    0.000
+    ##    .bdiq21            0.774    0.032   24.349    0.000
+    ##    .bdiq22_1          0.089    0.009   10.046    0.000
+    ##    .bdiq23_1          0.058    0.007    7.976    0.000
+    ##    .bdiq24_1          0.046    0.007    7.007    0.000
+    ##    .bdiq25_1          0.048    0.007    7.168    0.000
+    ##     pov               0.000                           
+    ##    .depf1             0.000                           
+    ##    .depf2             0.000                           
+    ## 
+    ## Variances:
+    ##                    Estimate  Std.Err  z-value  P(>|z|)
+    ##    .SESaQ13_1         0.657    0.032   20.699    0.000
+    ##    .SESaQ14           0.570    0.025   22.360    0.000
+    ##    .SESaQ15_1         3.102    0.137   22.582    0.000
+    ##    .SESaQ20_1         0.656    0.029   22.404    0.000
+    ##    .SESaQ21           0.378    0.017   22.286    0.000
+    ##    .SESaQ31_1         0.366    0.034   10.932    0.000
+    ##    .SESaQ32           1.562    0.070   22.433    0.000
+    ##    .SESaQ34_1         0.357    0.016   22.116    0.000
+    ##    .sumses9           0.643    0.030   21.179    0.000
+    ##    .sumses33          1.366    0.092   14.822    0.000
+    ##    .bdiq2             0.310    0.015   21.251    0.000
+    ##    .bdiq3             0.359    0.017   21.177    0.000
+    ##    .bdiq4             0.356    0.017   20.590    0.000
+    ##    .bdiq5             0.280    0.013   21.363    0.000
+    ##    .bdiq6             0.450    0.022   20.901    0.000
+    ##    .bdiq7             0.324    0.015   20.906    0.000
+    ##    .bdiq8             0.510    0.025   20.801    0.000
+    ##    .bdiq10            0.713    0.033   21.704    0.000
+    ##    .bdiq12            0.346    0.016   20.970    0.000
+    ##    .bdiq13            0.351    0.017   20.663    0.000
+    ##    .bdiq14            0.271    0.013   20.608    0.000
+    ##    .bdiq15            0.356    0.017   21.120    0.000
+    ##    .bdiq17            0.437    0.020   21.698    0.000
+    ##    .bdiq20            0.462    0.021   21.553    0.000
+    ##    .bdiq21            0.849    0.038   22.109    0.000
+    ##    .bdiq22_1          0.044    0.003   14.870    0.000
+    ##    .bdiq23_1          0.035    0.002   17.283    0.000
+    ##    .bdiq24_1          0.024    0.002   15.082    0.000
+    ##    .bdiq25_1          0.036    0.002   20.471    0.000
+    ##     pov               0.225    0.029    7.759    0.000
+    ##    .depf1             0.173    0.017   10.133    0.000
+    ##    .depf2             0.037    0.004    9.872    0.000
+
+``` r
+med_mod <- 'pov =~ SESaQ13_1 + SESaQ14 + SESaQ15_1 + SESaQ20_1 + SESaQ21 + SESaQ31_1 + SESaQ32 + SESaQ34_1 + sumses9 + sumses33
 trauf1 =~ MPSSQ2 + MPSSQ3 + MPSSQ4 + MPSSQ5 + MPSSQ6 + MPSSQ7 + MPSSQ8 + MPSSQ9 + MPSSQ10 + MPSSQ11 + MPSSQ12 + MPSSQ13 + MPSSQ14 + MPSSQ15 + MPSSQ16 + MPSSQ17 + MPSSQ18
 trauf2 =~ ipvq1 + ipvq2 + ipvq3 + ipvq4 + ipvq5 + ipvq6 + ipvq7 + ipvq8 + ipvq9 + ipvq10 + ipvq11 + ipvq12 + ipvq13 + ipvq14 + ipvq15
 depf1 =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21
@@ -56,8 +203,8 @@ depf2 ~ trauf1 + trauf2 + pov
 trauf1 ~ pov
 trauf2 ~ pov '
 
-med.mod.fit <- sem(med.mod, data = drak, missing = 'fiml.x')
-summary(med.mod.fit)
+med_mod_fit_1 <- sem(med_mod, data = drak, missing = 'fiml.x')
+summary(med_mod_fit_1)
 ```
 
     ## lavaan 0.6-3 ended normally after 136 iterations
