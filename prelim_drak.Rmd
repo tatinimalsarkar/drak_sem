@@ -123,7 +123,29 @@ This model only uses IPV and extends poverty.
 
 ## No mediator
 
-```{r }
+```{r drak_sem_nomed_4}
+nomed_mod <- 'pov =~ SESaQ3_1 + sumses9 + SESaQ13_1 + SESaQ14 + SESaQ15_1 + SESaQ20_1 + SESaQ21 + SESaQ31_1 + sumses33 + SESaQ34_1 + ethnicity
+depf1 =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21
+depf2 =~ bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1
 
+depf1 ~ pov
+depf2 ~ pov '
+
+nomed_mod_fit_4 <- sem(nomed_mod, data = drak, missing = 'fiml.x')
+summary(nomed_mod_fit_4)
+```
+
+```{r drak_sem_med_4}
+med_mod <- 'pov =~ SESaQ3_1 + sumses9 + SESaQ13_1 + SESaQ14 + SESaQ15_1 + SESaQ20_1 + SESaQ21 + SESaQ31_1 + sumses33 + SESaQ34_1 + ethnicity
+trauf2 =~ ipvq1 + ipvq2 + ipvq3 + ipvq4 + ipvq5 + ipvq6 + ipvq7 + ipvq8 + ipvq9 + ipvq10 + ipvq11 + ipvq12 + ipvq13 + ipvq14 + ipvq15
+depf1 =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21
+depf2 =~ bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1
+
+depf1 ~ trauf2 + pov
+depf2 ~ trauf2 + pov
+trauf2 ~ pov '
+
+med_mod_fit_4 <- sem(med_mod, data = drak, missing = 'fiml.x')
+summary(med_mod_fit_4)
 ```
 
