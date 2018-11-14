@@ -11,3 +11,33 @@ library(tidyverse)
 library(lavaan)
 library(semPlot)
 ```
+
+```{r drak_load}
+drak = read_csv("./data/KerryDataRequestV2_visit1_c.csv") %>% 
+  select(-ASSIST_Tobacco_Score:-opioids_preg_any,
+         -AQ1a:-AQ14b,
+         -pdiq1_afr:-pdiq13_xho,
+         -leq1_1_afr:-leq51_2_xho,
+         -ipvq1_afr:-ipvq17_xho,
+         -epdsq1_afr:-epdsq10_xho,
+         -bdiq1_afr:-bdiq25_2_xho,
+         -srqq1_afr:-srqq20_xho)
+```
+
+```{r drak_sem}
+#step 1
+med.mod <- 'pov =~ SESaQ13_1 + SESaQ14 + SESaQ15_1 + SESaQ20_1 + SESaQ21 + SESaQ31_1 + SESaQ32 + SESaQ34_1 + sumses9 + sumses33
+trauf1 =~ MPSSQ2 + MPSSQ3 + MPSSQ4 + MPSSQ5 + MPSSQ6 + MPSSQ7 + MPSSQ8 + MPSSQ9 + MPSSQ10 + MPSSQ11 + MPSSQ12 + MPSSQ13 + MPSSQ14 + MPSSQ15 + MPSSQ16 + MPSSQ17 + MPSSQ18
+trauf2 =~ ipvq1 + ipvq2 + ipvq3 + ipvq4 + ipvq5 + ipvq6 + ipvq7 + ipvq8 + ipvq9 + ipvq10 + ipvq11 + ipvq12 + ipvq13 + ipvq14 + ipvq15
+depf1 =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21
+depf2 =~ bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1
+
+depf1 ~ trauf1 + trauf2 + pov
+depf2 ~ trauf1 + trauf2 + pov
+trauf1 ~ pov
+trauf2 ~ pov '
+
+med.mod.fit <- sem(med.mod, data = drak, missing = 'fiml.x')
+summary(med.mod.fit)
+```
+
