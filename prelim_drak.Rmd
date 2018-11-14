@@ -24,6 +24,8 @@ drak = read_csv("./data/KerryDataRequestV2_visit1_c.csv") %>%
          -srqq1_afr:-srqq20_xho)
 ```
 
+# Model 1
+## No mediator
 ```{r drak_sem_nomed_1}
 nomed_mod <- 'pov =~ SESaQ13_1 + SESaQ14 + SESaQ15_1 + SESaQ20_1 + SESaQ21 + SESaQ31_1 + SESaQ32 + SESaQ34_1 + sumses9 + sumses33
 depf1 =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21
@@ -33,10 +35,10 @@ depf1 ~ pov
 depf2 ~ pov '
 
 nomed_mod_fit_1 <- sem(nomed_mod, data = drak, missing = 'fiml.x')
-nomed_mod_fit_sum_1 = summary(nomed_mod_fit_1)
+summary(nomed_mod_fit_1)
 ```
 
-
+## With mediator
 ```{r drak_sem_med_1}
 med_mod <- 'pov =~ SESaQ13_1 + SESaQ14 + SESaQ15_1 + SESaQ20_1 + SESaQ21 + SESaQ31_1 + SESaQ32 + SESaQ34_1 + sumses9 + sumses33
 trauf1 =~ MPSSQ2 + MPSSQ3 + MPSSQ4 + MPSSQ5 + MPSSQ6 + MPSSQ7 + MPSSQ8 + MPSSQ9 + MPSSQ10 + MPSSQ11 + MPSSQ12 + MPSSQ13 + MPSSQ14 + MPSSQ15 + MPSSQ16 + MPSSQ17 + MPSSQ18
@@ -53,7 +55,75 @@ med_mod_fit_1 <- sem(med_mod, data = drak, missing = 'fiml.x')
 summary(med_mod_fit_1)
 ```
 
-```{r}
+# Model 2
+This model excludes PTSD from trauma.
+
+## No mediator
+```{r drak_sem_nomed_2}
+nomed_mod <- 'pov =~ SESaQ13_1 + SESaQ14 + SESaQ15_1 + SESaQ20_1 + SESaQ21 + SESaQ31_1 + SESaQ32 + SESaQ34_1 + sumses9 + sumses33
+depf1 =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21
+depf2 =~ bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1
+
+depf1 ~ pov
+depf2 ~ pov '
+
+nomed_mod_fit_2 <- sem(nomed_mod, data = drak, missing = 'fiml.x')
+summary(nomed_mod_fit_2)
+```
+
+## With mediator
+```{r drak_sem_med_2}
+med_mod <- 'pov =~ SESaQ13_1 + SESaQ14 + SESaQ15_1 + SESaQ20_1 + SESaQ21 + SESaQ31_1 + SESaQ32 + SESaQ34_1 + sumses9 + sumses33
+trauf2 =~ ipvq1 + ipvq2 + ipvq3 + ipvq4 + ipvq5 + ipvq6 + ipvq7 + ipvq8 + ipvq9 + ipvq10 + ipvq11 + ipvq12 + ipvq13 + ipvq14 + ipvq15
+depf1 =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21
+depf2 =~ bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1
+
+depf1 ~ trauf2 + pov
+depf2 ~ trauf2 + pov
+trauf2 ~ pov '
+
+med_mod_fit_2 <- sem(med_mod, data = drak, missing = 'fiml.x')
+summary(med_mod_fit_2)
+```
+
+
+# Model 3
+This model has even fewer variables on poverty than Model 1. Trauma here is only IPV, not PTSD.
+
+## No mediator
+```{r drak_sem_nomed_3}
+nomed_mod <- 'pov =~ sumses9 + ethnicity + SESaQ31_1 + sumses33 + SESaQ34_1
+depf1 =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21
+depf2 =~ bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1
+
+depf1 ~ pov
+depf2 ~ pov '
+
+nomed_mod_fit_3 <- sem(nomed_mod, data = drak, missing = 'fiml.x')
+summary(nomed_mod_fit_3)
+```
+
+## With mediator
+```{r drak_sem_med_3}
+med_mod <- 'pov =~ sumses9 + ethnicity + SESaQ31_1 + sumses33 + SESaQ34_1
+trauf2 =~ ipvq1 + ipvq2 + ipvq3 + ipvq4 + ipvq5 + ipvq6 + ipvq7 + ipvq8 + ipvq9 + ipvq10 + ipvq11 + ipvq12 + ipvq13 + ipvq14 + ipvq15
+depf1 =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21
+depf2 =~ bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1
+
+depf1 ~ trauf2 + pov
+depf2 ~ trauf2 + pov
+trauf2 ~ pov '
+
+med_mod_fit_3 <- sem(med_mod, data = drak, missing = 'fiml.x')
+summary(med_mod_fit_3)
+```
+
+# Model 4
+This model only uses IPV and extends poverty.
+
+## No mediator
+
+```{r }
 
 ```
 
