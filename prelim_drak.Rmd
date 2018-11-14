@@ -148,4 +148,3 @@ trauf2 ~ pov '
 med_mod_fit_4 <- sem(med_mod, data = drak, missing = 'fiml.x')
 summary(med_mod_fit_4)
 ```
-
