@@ -1517,3 +1517,331 @@ summary(med_mod_fit_4)
     ##    .trauf2            0.503    0.039   12.831    0.000
     ##    .depf1             0.159    0.016   10.181    0.000
     ##    .depf2             0.031    0.003    9.560    0.000
+
+``` r
+nomed_mod <- 'pov =~ sumses9 + ethnicity + SESaQ31_1 + sumses33 + SESaQ34_1
+depf1 =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1
+
+depf1 ~ pov '
+
+nomed_mod_fit <- sem(nomed_mod, data = drak, missing = 'fiml.x')
+summary(nomed_mod_fit)
+```
+
+    ## lavaan 0.6-3 ended normally after 70 iterations
+    ## 
+    ##   Optimization method                           NLMINB
+    ##   Number of free parameters                         73
+    ## 
+    ##   Number of observations                          1036
+    ##   Number of missing patterns                        18
+    ## 
+    ##   Estimator                                         ML
+    ##   Model Fit Test Statistic                    1715.399
+    ##   Degrees of freedom                               251
+    ##   P-value (Chi-square)                           0.000
+    ## 
+    ## Parameter Estimates:
+    ## 
+    ##   Information                                 Observed
+    ##   Observed information based on                Hessian
+    ##   Standard Errors                             Standard
+    ## 
+    ## Latent Variables:
+    ##                    Estimate  Std.Err  z-value  P(>|z|)
+    ##   pov =~                                              
+    ##     sumses9           1.000                           
+    ##     ethnicity         1.165    0.117    9.940    0.000
+    ##     SESaQ31_1         2.317    0.190   12.199    0.000
+    ##     sumses33          3.461    0.285   12.149    0.000
+    ##     SESaQ34_1        -0.466    0.066   -7.100    0.000
+    ##   depf1 =~                                            
+    ##     bdiq2             1.000                           
+    ##     bdiq3             1.095    0.067   16.396    0.000
+    ##     bdiq4             1.301    0.075   17.429    0.000
+    ##     bdiq5             0.926    0.059   15.752    0.000
+    ##     bdiq6             1.356    0.080   16.902    0.000
+    ##     bdiq7             1.134    0.067   16.817    0.000
+    ##     bdiq8             1.475    0.087   17.040    0.000
+    ##     bdiq10            1.276    0.088   14.483    0.000
+    ##     bdiq12            1.165    0.070   16.664    0.000
+    ##     bdiq13            1.261    0.073   17.184    0.000
+    ##     bdiq14            1.122    0.064   17.412    0.000
+    ##     bdiq15            1.093    0.068   15.979    0.000
+    ##     bdiq17            0.971    0.068   14.236    0.000
+    ##     bdiq20            1.059    0.072   14.678    0.000
+    ##     bdiq21            1.056    0.087   12.136    0.000
+    ##     bdiq22_1          0.165    0.023    7.152    0.000
+    ##     bdiq23_1          0.143    0.019    7.534    0.000
+    ##     bdiq24_1          0.097    0.017    5.769    0.000
+    ##     bdiq25_1          0.111    0.017    6.473    0.000
+    ## 
+    ## Regressions:
+    ##                    Estimate  Std.Err  z-value  P(>|z|)
+    ##   depf1 ~                                             
+    ##     pov              -0.015    0.040   -0.366    0.715
+    ## 
+    ## Intercepts:
+    ##                    Estimate  Std.Err  z-value  P(>|z|)
+    ##    .sumses9           2.232    0.028   79.773    0.000
+    ##    .ethnicity         1.907    0.031   61.615    0.000
+    ##    .SESaQ31_1         2.560    0.033   77.309    0.000
+    ##    .sumses33          4.779    0.055   86.895    0.000
+    ##    .SESaQ34_1         1.748    0.019   89.881    0.000
+    ##    .bdiq2             0.357    0.022   16.501    0.000
+    ##    .bdiq3             0.405    0.023   17.281    0.000
+    ##    .bdiq4             0.588    0.025   23.376    0.000
+    ##    .bdiq5             0.404    0.020   19.859    0.000
+    ##    .bdiq6             0.457    0.027   16.822    0.000
+    ##    .bdiq7             0.378    0.023   16.419    0.000
+    ##    .bdiq8             0.525    0.029   17.876    0.000
+    ##    .bdiq10            0.582    0.031   18.757    0.000
+    ##    .bdiq12            0.500    0.024   21.106    0.000
+    ##    .bdiq13            0.490    0.025   19.866    0.000
+    ##    .bdiq14            0.333    0.022   15.260    0.000
+    ##    .bdiq15            0.585    0.023   25.000    0.000
+    ##    .bdiq17            0.618    0.024   25.667    0.000
+    ##    .bdiq20            0.690    0.025   27.351    0.000
+    ##    .bdiq21            0.774    0.032   24.348    0.000
+    ##    .bdiq22_1          0.089    0.009   10.057    0.000
+    ##    .bdiq23_1          0.058    0.007    7.989    0.000
+    ##    .bdiq24_1          0.046    0.007    7.023    0.000
+    ##    .bdiq25_1          0.048    0.007    7.179    0.000
+    ##     pov               0.000                           
+    ##    .depf1             0.000                           
+    ## 
+    ## Variances:
+    ##                    Estimate  Std.Err  z-value  P(>|z|)
+    ##    .sumses9           0.659    0.031   21.447    0.000
+    ##    .ethnicity         0.789    0.037   21.292    0.000
+    ##    .SESaQ31_1         0.336    0.040    8.336    0.000
+    ##    .sumses33          1.341    0.102   13.152    0.000
+    ##    .SESaQ34_1         0.359    0.016   22.051    0.000
+    ##    .bdiq2             0.310    0.015   21.266    0.000
+    ##    .bdiq3             0.361    0.017   21.212    0.000
+    ##    .bdiq4             0.361    0.017   20.662    0.000
+    ##    .bdiq5             0.280    0.013   21.369    0.000
+    ##    .bdiq6             0.446    0.021   20.872    0.000
+    ##    .bdiq7             0.326    0.016   20.948    0.000
+    ##    .bdiq8             0.513    0.025   20.844    0.000
+    ##    .bdiq10            0.713    0.033   21.710    0.000
+    ##    .bdiq12            0.346    0.016   20.988    0.000
+    ##    .bdiq13            0.353    0.017   20.704    0.000
+    ##    .bdiq14            0.272    0.013   20.648    0.000
+    ##    .bdiq15            0.358    0.017   21.158    0.000
+    ##    .bdiq17            0.435    0.020   21.690    0.000
+    ##    .bdiq20            0.462    0.021   21.571    0.000
+    ##    .bdiq21            0.850    0.038   22.118    0.000
+    ##    .bdiq22_1          0.077    0.003   22.529    0.000
+    ##    .bdiq23_1          0.051    0.002   22.509    0.000
+    ##    .bdiq24_1          0.042    0.002   22.579    0.000
+    ##    .bdiq25_1          0.043    0.002   22.565    0.000
+    ##     pov               0.149    0.023    6.482    0.000
+    ##    .depf1             0.173    0.017   10.134    0.000
+
+``` r
+med_mod <- 'pov =~ sumses9 + ethnicity + SESaQ31_1 + sumses33 + SESaQ34_1
+trauf2 =~ ipvq1 + ipvq2 + ipvq3 + ipvq4 + ipvq5 + ipvq6 + ipvq7 + ipvq8 + ipvq9 + ipvq10 + ipvq11 + ipvq12 + ipvq13 + ipvq14 + ipvq15
+depf1 =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1
+
+depf1 ~ trauf2 + pov
+trauf2 ~ pov '
+
+med_mod_fit <- sem(med_mod, data = drak, missing = 'fiml.x')
+summary(med_mod_fit)
+```
+
+    ## lavaan 0.6-3 ended normally after 98 iterations
+    ## 
+    ##   Optimization method                           NLMINB
+    ##   Number of free parameters                        120
+    ## 
+    ##   Number of observations                          1036
+    ##   Number of missing patterns                        32
+    ## 
+    ##   Estimator                                         ML
+    ##   Model Fit Test Statistic                    4194.279
+    ##   Degrees of freedom                               699
+    ##   P-value (Chi-square)                           0.000
+    ## 
+    ## Parameter Estimates:
+    ## 
+    ##   Information                                 Observed
+    ##   Observed information based on                Hessian
+    ##   Standard Errors                             Standard
+    ## 
+    ## Latent Variables:
+    ##                    Estimate  Std.Err  z-value  P(>|z|)
+    ##   pov =~                                              
+    ##     sumses9           1.000                           
+    ##     ethnicity         1.174    0.118    9.982    0.000
+    ##     SESaQ31_1         2.321    0.190   12.202    0.000
+    ##     sumses33          3.449    0.283   12.169    0.000
+    ##     SESaQ34_1        -0.465    0.065   -7.099    0.000
+    ##   trauf2 =~                                           
+    ##     ipvq1             1.000                           
+    ##     ipvq2             0.863    0.038   22.433    0.000
+    ##     ipvq3             0.876    0.038   22.959    0.000
+    ##     ipvq4             0.920    0.038   24.154    0.000
+    ##     ipvq5            -0.395    0.022  -18.022    0.000
+    ##     ipvq6             0.938    0.042   22.528    0.000
+    ##     ipvq7             0.941    0.041   23.214    0.000
+    ##     ipvq8             0.739    0.033   22.429    0.000
+    ##     ipvq9             0.698    0.031   22.248    0.000
+    ##     ipvq10            0.409    0.022   18.192    0.000
+    ##     ipvq11           -0.337    0.021  -15.731    0.000
+    ##     ipvq12            0.400    0.024   16.820    0.000
+    ##     ipvq13            0.417    0.025   16.929    0.000
+    ##     ipvq14            0.214    0.015   14.172    0.000
+    ##     ipvq15           -0.249    0.016  -15.662    0.000
+    ##   depf1 =~                                            
+    ##     bdiq2             1.000                           
+    ##     bdiq3             1.093    0.066   16.530    0.000
+    ##     bdiq4             1.289    0.074   17.481    0.000
+    ##     bdiq5             0.919    0.058   15.804    0.000
+    ##     bdiq6             1.353    0.079   17.041    0.000
+    ##     bdiq7             1.122    0.067   16.846    0.000
+    ##     bdiq8             1.463    0.086   17.107    0.000
+    ##     bdiq10            1.265    0.087   14.519    0.000
+    ##     bdiq12            1.158    0.069   16.757    0.000
+    ##     bdiq13            1.252    0.073   17.264    0.000
+    ##     bdiq14            1.113    0.064   17.476    0.000
+    ##     bdiq15            1.085    0.068   16.039    0.000
+    ##     bdiq17            0.968    0.068   14.322    0.000
+    ##     bdiq20            1.049    0.071   14.693    0.000
+    ##     bdiq21            1.051    0.086   12.190    0.000
+    ##     bdiq22_1          0.168    0.023    7.322    0.000
+    ##     bdiq23_1          0.146    0.019    7.727    0.000
+    ##     bdiq24_1          0.099    0.017    5.957    0.000
+    ##     bdiq25_1          0.113    0.017    6.644    0.000
+    ## 
+    ## Regressions:
+    ##                    Estimate  Std.Err  z-value  P(>|z|)
+    ##   depf1 ~                                             
+    ##     trauf2            0.187    0.022    8.611    0.000
+    ##     pov              -0.041    0.039   -1.065    0.287
+    ##   trauf2 ~                                            
+    ##     pov               0.150    0.068    2.216    0.027
+    ## 
+    ## Intercepts:
+    ##                    Estimate  Std.Err  z-value  P(>|z|)
+    ##    .sumses9           2.232    0.028   79.775    0.000
+    ##    .ethnicity         1.907    0.031   61.615    0.000
+    ##    .SESaQ31_1         2.560    0.033   77.309    0.000
+    ##    .sumses33          4.779    0.055   86.895    0.000
+    ##    .SESaQ34_1         1.748    0.019   89.881    0.000
+    ##    .ipvq1             1.716    0.031   55.164    0.000
+    ##    .ipvq2             1.442    0.027   53.798    0.000
+    ##    .ipvq3             1.410    0.026   53.939    0.000
+    ##    .ipvq4             1.369    0.026   52.506    0.000
+    ##    .ipvq5             1.649    0.016  106.210    0.000
+    ##    .ipvq6             1.666    0.029   58.331    0.000
+    ##    .ipvq7             1.515    0.028   54.839    0.000
+    ##    .ipvq8             1.276    0.022   56.912    0.000
+    ##    .ipvq9             1.246    0.021   58.778    0.000
+    ##    .ipvq10            1.124    0.015   73.425    0.000
+    ##    .ipvq11            1.688    0.015  111.369    0.000
+    ##    .ipvq12            1.138    0.016   70.428    0.000
+    ##    .ipvq13            1.156    0.017   69.195    0.000
+    ##    .ipvq14            1.055    0.010  103.074    0.000
+    ##    .ipvq15            1.879    0.011  171.300    0.000
+    ##    .bdiq2             0.357    0.022   16.499    0.000
+    ##    .bdiq3             0.405    0.023   17.278    0.000
+    ##    .bdiq4             0.588    0.025   23.374    0.000
+    ##    .bdiq5             0.404    0.020   19.857    0.000
+    ##    .bdiq6             0.457    0.027   16.819    0.000
+    ##    .bdiq7             0.378    0.023   16.416    0.000
+    ##    .bdiq8             0.524    0.029   17.872    0.000
+    ##    .bdiq10            0.582    0.031   18.754    0.000
+    ##    .bdiq12            0.500    0.024   21.102    0.000
+    ##    .bdiq13            0.490    0.025   19.862    0.000
+    ##    .bdiq14            0.333    0.022   15.257    0.000
+    ##    .bdiq15            0.585    0.023   24.997    0.000
+    ##    .bdiq17            0.618    0.024   25.665    0.000
+    ##    .bdiq20            0.690    0.025   27.348    0.000
+    ##    .bdiq21            0.774    0.032   24.346    0.000
+    ##    .bdiq22_1          0.089    0.009   10.056    0.000
+    ##    .bdiq23_1          0.058    0.007    7.988    0.000
+    ##    .bdiq24_1          0.046    0.007    7.022    0.000
+    ##    .bdiq25_1          0.048    0.007    7.178    0.000
+    ##     pov               0.000                           
+    ##    .trauf2            0.000                           
+    ##    .depf1             0.000                           
+    ## 
+    ## Variances:
+    ##                    Estimate  Std.Err  z-value  P(>|z|)
+    ##    .sumses9           0.659    0.031   21.449    0.000
+    ##    .ethnicity         0.786    0.037   21.247    0.000
+    ##    .SESaQ31_1         0.333    0.040    8.365    0.000
+    ##    .sumses33          1.355    0.101   13.464    0.000
+    ##    .SESaQ34_1         0.359    0.016   22.057    0.000
+    ##    .ipvq1             0.492    0.024   20.675    0.000
+    ##    .ipvq2             0.364    0.018   20.737    0.000
+    ##    .ipvq3             0.315    0.016   20.288    0.000
+    ##    .ipvq4             0.272    0.014   19.702    0.000
+    ##    .ipvq5             0.150    0.007   20.479    0.000
+    ##    .ipvq6             0.396    0.019   20.447    0.000
+    ##    .ipvq7             0.339    0.017   20.124    0.000
+    ##    .ipvq8             0.241    0.012   20.518    0.000
+    ##    .ipvq9             0.217    0.011   20.514    0.000
+    ##    .ipvq10            0.157    0.007   21.713    0.000
+    ##    .ipvq11            0.158    0.008   20.742    0.000
+    ##    .ipvq12            0.188    0.009   21.861    0.000
+    ##    .ipvq13            0.200    0.009   21.806    0.000
+    ##    .ipvq14            0.085    0.004   22.184    0.000
+    ##    .ipvq15            0.076    0.004   19.826    0.000
+    ##    .bdiq2             0.308    0.014   21.252    0.000
+    ##    .bdiq3             0.359    0.017   21.206    0.000
+    ##    .bdiq4             0.363    0.018   20.710    0.000
+    ##    .bdiq5             0.280    0.013   21.393    0.000
+    ##    .bdiq6             0.444    0.021   20.866    0.000
+    ##    .bdiq7             0.328    0.016   20.995    0.000
+    ##    .bdiq8             0.514    0.025   20.877    0.000
+    ##    .bdiq10            0.714    0.033   21.726    0.000
+    ##    .bdiq12            0.345    0.016   21.005    0.000
+    ##    .bdiq13            0.353    0.017   20.732    0.000
+    ##    .bdiq14            0.273    0.013   20.688    0.000
+    ##    .bdiq15            0.358    0.017   21.182    0.000
+    ##    .bdiq17            0.434    0.020   21.694    0.000
+    ##    .bdiq20            0.464    0.021   21.597    0.000
+    ##    .bdiq21            0.849    0.038   22.121    0.000
+    ##    .bdiq22_1          0.076    0.003   22.521    0.000
+    ##    .bdiq23_1          0.051    0.002   22.500    0.000
+    ##    .bdiq24_1          0.042    0.002   22.572    0.000
+    ##    .bdiq25_1          0.043    0.002   22.558    0.000
+    ##     pov               0.149    0.023    6.482    0.000
+    ##    .trauf2            0.505    0.039   12.841    0.000
+    ##    .depf1             0.158    0.015   10.191    0.000
+
+``` r
+drak %>% 
+  mutate(pov_sum = SESaQ3_1 + sumses9 + SESaQ13_1 + SESaQ14 + SESaQ15_1 + SESaQ20_1 + SESaQ21 + SESaQ31_1 + sumses33 + SESaQ34_1,
+         bdi = bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1) %>% 
+  group_by(Clinic) %>% 
+  ggplot(aes(x = pov_sum, y = bdi, color = ethnicity)) + 
+    geom_point() +
+  facet_grid(~ Clinic)
+```
+
+    ## Warning: Removed 62 rows containing missing values (geom_point).
+
+![](prelim_drak_files/figure-markdown_github/drak_efa-1.png)
+
+``` r
+drak_lm = drak %>% 
+  mutate(pov_sum = SESaQ3_1 + sumses9 + SESaQ13_1 + SESaQ14 + SESaQ15_1 + SESaQ20_1 + SESaQ21 + SESaQ31_1 + sumses33 + SESaQ34_1,
+         bdi = bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1)
+
+fit = lm(bdi ~ pov_sum + ethnicity + Clinic, data = drak_lm) 
+
+fit %>% 
+  broom::tidy() %>% 
+  knitr::kable(digits = 3)
+```
+
+| term        |  estimate|  std.error|  statistic|  p.value|
+|:------------|---------:|----------:|----------:|--------:|
+| (Intercept) |     3.585|      2.167|      1.655|    0.098|
+| pov\_sum    |    -0.008|      0.072|     -0.113|    0.910|
+| ethnicity   |    -1.608|      1.087|     -1.479|    0.139|
+| Clinic      |     5.133|      2.174|      2.362|    0.018|

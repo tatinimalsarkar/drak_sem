@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(lavaan)
 library(semPlot)
+library(ggridges)
 ```
 
 ```{r drak_load}
@@ -148,3 +149,48 @@ trauf2 ~ pov '
 med_mod_fit_4 <- sem(med_mod, data = drak, missing = 'fiml.x')
 summary(med_mod_fit_4)
 ```
+
+```{r drak_dep_nomed}
+nomed_mod <- 'pov =~ sumses9 + ethnicity + SESaQ31_1 + sumses33 + SESaQ34_1
+depf1 =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1
+
+depf1 ~ pov '
+
+nomed_mod_fit <- sem(nomed_mod, data = drak, missing = 'fiml.x')
+summary(nomed_mod_fit)
+```
+
+```{r drak_dep_med}
+med_mod <- 'pov =~ sumses9 + ethnicity + SESaQ31_1 + sumses33 + SESaQ34_1
+trauf2 =~ ipvq1 + ipvq2 + ipvq3 + ipvq4 + ipvq5 + ipvq6 + ipvq7 + ipvq8 + ipvq9 + ipvq10 + ipvq11 + ipvq12 + ipvq13 + ipvq14 + ipvq15
+depf1 =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1
+
+depf1 ~ trauf2 + pov
+trauf2 ~ pov '
+
+med_mod_fit <- sem(med_mod, data = drak, missing = 'fiml.x')
+summary(med_mod_fit)
+```
+
+```{r drak_efa}
+drak %>% 
+  mutate(pov_sum = SESaQ3_1 + sumses9 + SESaQ13_1 + SESaQ14 + SESaQ15_1 + SESaQ20_1 + SESaQ21 + SESaQ31_1 + sumses33 + SESaQ34_1,
+         bdi = bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1) %>% 
+  group_by(Clinic) %>% 
+  ggplot(aes(x = pov_sum, y = bdi, color = ethnicity)) + 
+    geom_point() +
+  facet_grid(~ Clinic)
+```
+
+```{r drak_lm}
+drak_lm = drak %>% 
+  mutate(pov_sum = SESaQ3_1 + sumses9 + SESaQ13_1 + SESaQ14 + SESaQ15_1 + SESaQ20_1 + SESaQ21 + SESaQ31_1 + sumses33 + SESaQ34_1,
+         bdi = bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1)
+
+fit = lm(bdi ~ pov_sum + ethnicity + Clinic, data = drak_lm) 
+
+fit %>% 
+  broom::tidy() %>% 
+  knitr::kable(digits = 3)
+```
+
