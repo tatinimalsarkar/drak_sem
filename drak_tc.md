@@ -9,7 +9,7 @@ TC Newman Model 3
 Model 3, applied to TC Newman
 
 ``` r
-drak_tc = read_csv("./data/KerryDataRequestV2_visit1_c.csv") %>% 
+drak_tc = read_csv("/Users/tatinimal-sarkar/Documents/mph2/practicum/thesis/data/KerryDataRequestV2_visit1_c.csv") %>% 
   select(-ASSIST_Tobacco_Score:-opioids_preg_any,
          -AQ1a:-AQ14b,
          -pdiq1_afr:-pdiq13_xho,
