@@ -1845,3 +1845,110 @@ fit %>%
 | pov\_sum    |    -0.008|      0.072|     -0.113|    0.910|
 | ethnicity   |    -1.608|      1.087|     -1.479|    0.139|
 | Clinic      |     5.133|      2.174|      2.362|    0.018|
+
+``` r
+fit_2 = lm(bdi ~ sumses33, data = drak_lm)
+
+fit_2 %>% 
+  broom::tidy() %>% 
+  knitr::kable(digits = 3)
+```
+
+| term        |  estimate|  std.error|  statistic|  p.value|
+|:------------|---------:|----------:|----------:|--------:|
+| (Intercept) |     9.602|      0.714|     13.456|    0.000|
+| sumses33    |    -0.367|      0.140|     -2.627|    0.009|
+
+``` r
+drak %>% 
+  mutate(bdi = bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1) %>% 
+  group_by(Clinic) %>% 
+  ggplot(aes(x = sumses9, y = bdi, color = ethnicity)) + 
+    geom_point() +
+    geom_smooth() +
+  facet_grid(~ Clinic)
+```
+
+    ## `geom_smooth()` using method = 'loess' and formula 'y ~ x'
+
+    ## Warning: Removed 20 rows containing non-finite values (stat_smooth).
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
+    ## parametric, : pseudoinverse used at 2
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
+    ## parametric, : neighborhood radius 1
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
+    ## parametric, : reciprocal condition number 0
+
+    ## Warning in predLoess(object$y, object$x, newx = if
+    ## (is.null(newdata)) object$x else if (is.data.frame(newdata))
+    ## as.matrix(model.frame(delete.response(terms(object)), : pseudoinverse used
+    ## at 2
+
+    ## Warning in predLoess(object$y, object$x, newx = if
+    ## (is.null(newdata)) object$x else if (is.data.frame(newdata))
+    ## as.matrix(model.frame(delete.response(terms(object)), : neighborhood radius
+    ## 1
+
+    ## Warning in predLoess(object$y, object$x, newx = if
+    ## (is.null(newdata)) object$x else if (is.data.frame(newdata))
+    ## as.matrix(model.frame(delete.response(terms(object)), : reciprocal
+    ## condition number 0
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
+    ## parametric, : pseudoinverse used at 2
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
+    ## parametric, : neighborhood radius 1
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
+    ## parametric, : reciprocal condition number 0
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
+    ## parametric, : There are other near singularities as well. 1
+
+    ## Warning in predLoess(object$y, object$x, newx = if
+    ## (is.null(newdata)) object$x else if (is.data.frame(newdata))
+    ## as.matrix(model.frame(delete.response(terms(object)), : pseudoinverse used
+    ## at 2
+
+    ## Warning in predLoess(object$y, object$x, newx = if
+    ## (is.null(newdata)) object$x else if (is.data.frame(newdata))
+    ## as.matrix(model.frame(delete.response(terms(object)), : neighborhood radius
+    ## 1
+
+    ## Warning in predLoess(object$y, object$x, newx = if
+    ## (is.null(newdata)) object$x else if (is.data.frame(newdata))
+    ## as.matrix(model.frame(delete.response(terms(object)), : reciprocal
+    ## condition number 0
+
+    ## Warning in predLoess(object$y, object$x, newx = if
+    ## (is.null(newdata)) object$x else if (is.data.frame(newdata))
+    ## as.matrix(model.frame(delete.response(terms(object)), : There are other
+    ## near singularities as well. 1
+
+    ## Warning: Removed 20 rows containing missing values (geom_point).
+
+![](prelim_drak_files/figure-markdown_github/drak_dep_sumses9-1.png)
+
+``` r
+drak %>% 
+  mutate(bdi = bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1) %>% 
+  group_by(Clinic) %>% 
+  ggplot(aes(x = sumses33, y = bdi, color = ethnicity)) + 
+    geom_point() +
+    geom_smooth() +
+  facet_grid(~ Clinic)
+```
+
+    ## `geom_smooth()` using method = 'loess' and formula 'y ~ x'
+
+    ## Warning: Removed 21 rows containing non-finite values (stat_smooth).
+
+    ## Warning: Removed 21 rows containing missing values (geom_point).
+
+![](prelim_drak_files/figure-markdown_github/drak_dep_sumses33-1.png)
+
+Recoding ethnicity to 0 and 1. Recoding clinic to 0 and 1. Recode SES into the same direction? (reverse some stuff, probably)

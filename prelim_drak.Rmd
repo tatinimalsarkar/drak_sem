@@ -192,5 +192,35 @@ fit = lm(bdi ~ pov_sum + ethnicity + Clinic, data = drak_lm)
 fit %>% 
   broom::tidy() %>% 
   knitr::kable(digits = 3)
+
+fit_2 = lm(bdi ~ sumses33, data = drak_lm)
+
+fit_2 %>% 
+  broom::tidy() %>% 
+  knitr::kable(digits = 3)
 ```
 
+```{r drak_dep_sumses9}
+drak %>% 
+  mutate(bdi = bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1) %>% 
+  group_by(Clinic) %>% 
+  ggplot(aes(x = sumses9, y = bdi, color = ethnicity)) + 
+    geom_point() +
+    geom_smooth() +
+  facet_grid(~ Clinic)
+```
+
+```{r drak_dep_sumses33}
+drak %>% 
+  mutate(bdi = bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1) %>% 
+  group_by(Clinic) %>% 
+  ggplot(aes(x = sumses33, y = bdi, color = ethnicity)) + 
+    geom_point() +
+    geom_smooth() +
+  facet_grid(~ Clinic)
+```
+
+
+Recoding ethnicity to 0 and 1. 
+Recoding clinic to 0 and 1.
+Recode SES into the same direction? (reverse some stuff, probably)
