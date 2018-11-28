@@ -258,3 +258,32 @@ drak_clean %>%
     facet_grid(~ clinic)
 ```
 
+I want to stratify this by clinic!
+```{r drak_clean_nomed}
+nomed_mod_cl <- 'ses =~ revsum9 + housing + owner + sumses33 
+depf1 =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1
+
+depf1 ~ ses '
+
+nomed_mod_fit_cl <- sem(nomed_mod_cl, data = drak_clean, missing = 'fiml.x', group = "clinic")
+summary(nomed_mod_fit_cl)
+```
+
+Mediation analysis
+```{r drak_med}
+model <- 'ses =~ revsum9 + housing + ethnicity + owner + sumses33
+depf1 =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1
+trauf =~ ipvq1 + ipvq2 + ipvq3 + ipvq4 + ipvq5 + ipvq6 + ipvq7 + ipvq8 + ipvq9 + ipvq10 + ipvq11 + ipvq12 + ipvq13 + ipvq14 + ipvq15
+
+depf1 ~ b*trauf + c*ses
+trauf ~ a*ses
+
+indirect := a*b
+total := c + (a*b)
+'
+
+fit <- sem(model, drak_clean, "bootstrap")
+summary(fit)
+  
+```
+
