@@ -300,12 +300,22 @@ drak_clean_pov = drak %>%
   mutate(ethnicity = as.numeric(ethnicity > 1),
          clinic = as.numeric(Clinic > 1),
          bdi = bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1,
-         revsum9 = 5 - sumses9) %>% 
+         revsum33 = 9 - sumses33) %>% 
   filter(SESaQ31_1 != 6,
          SESaQ34_1 != 4) %>% 
-  mutate(housing = as.numeric(SESaQ31_1 > 2),
-         owner = as.numeric(SESaQ34_1 == 1),
-         ses = revsum9 + housing + owner + sumses33) %>% 
+  mutate(housing = as.numeric(SESaQ31_1 < 3),
+         owner = as.numeric(SESaQ34_1 > 1),
+         ses = sumses9 + housing + owner + revsum33) %>% 
   select(-Clinic)
+```
+
+```{r}
+nomed_mod_cl <- 'pov =~ sumses9 + housing + owner + revsum33 
+depf1 =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1
+
+depf1 ~ pov '
+
+nomed_mod_fit_cl <- sem(nomed_mod_cl, data = drak_clean_pov, missing = 'fiml.x', group = "clinic")
+summary(nomed_mod_fit_cl)
 ```
 

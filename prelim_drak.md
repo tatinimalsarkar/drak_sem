@@ -1991,3 +1991,668 @@ drak_clean %>%
     ## Warning: Removed 26 rows containing missing values (geom_point).
 
 ![](prelim_drak_files/figure-markdown_github/drak_clean_plot-1.png)
+
+I want to stratify this by clinic!
+
+``` r
+nomed_mod_cl <- 'ses =~ revsum9 + housing + owner + sumses33 
+depf1 =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1
+
+depf1 ~ ses '
+
+nomed_mod_fit_cl <- sem(nomed_mod_cl, data = drak_clean, missing = 'fiml.x', group = "clinic")
+summary(nomed_mod_fit_cl)
+```
+
+    ## lavaan 0.6-3 ended normally after 120 iterations
+    ## 
+    ##   Optimization method                           NLMINB
+    ##   Number of free parameters                        140
+    ## 
+    ##   Number of observations per group         
+    ##   0                                                562
+    ##   1                                                456
+    ##   Number of missing patterns per group     
+    ##   0                                                 14
+    ##   1                                                  5
+    ## 
+    ##   Estimator                                         ML
+    ##   Model Fit Test Statistic                    1622.401
+    ##   Degrees of freedom                               458
+    ##   P-value (Chi-square)                           0.000
+    ## 
+    ## Chi-square for each group:
+    ## 
+    ##   0                                            894.117
+    ##   1                                            728.283
+    ## 
+    ## Parameter Estimates:
+    ## 
+    ##   Information                                 Observed
+    ##   Observed information based on                Hessian
+    ##   Standard Errors                             Standard
+    ## 
+    ## 
+    ## Group 1 [0]:
+    ## 
+    ## Latent Variables:
+    ##                    Estimate  Std.Err  z-value  P(>|z|)
+    ##   ses =~                                              
+    ##     revsum9           1.000                           
+    ##     housing          -1.264    0.145   -8.739    0.000
+    ##     owner            -0.304    0.063   -4.840    0.000
+    ##     sumses33         -3.921    0.435   -9.017    0.000
+    ##   depf1 =~                                            
+    ##     bdiq2             1.000                           
+    ##     bdiq3             1.139    0.089   12.839    0.000
+    ##     bdiq4             1.466    0.106   13.894    0.000
+    ##     bdiq5             0.942    0.080   11.801    0.000
+    ##     bdiq6             1.343    0.097   13.777    0.000
+    ##     bdiq7             1.255    0.094   13.373    0.000
+    ##     bdiq8             1.567    0.117   13.384    0.000
+    ##     bdiq10            1.225    0.103   11.854    0.000
+    ##     bdiq12            1.229    0.092   13.427    0.000
+    ##     bdiq13            1.287    0.091   14.146    0.000
+    ##     bdiq14            1.197    0.085   14.143    0.000
+    ##     bdiq15            1.276    0.092   13.928    0.000
+    ##     bdiq17            1.011    0.087   11.663    0.000
+    ##     bdiq20            1.299    0.099   13.165    0.000
+    ##     bdiq21            1.282    0.122   10.521    0.000
+    ##     bdiq22_1          0.056    0.020    2.792    0.005
+    ##     bdiq23_1          0.040    0.013    3.028    0.002
+    ##     bdiq24_1          0.018    0.008    2.336    0.019
+    ##     bdiq25_1          0.014    0.006    2.171    0.030
+    ## 
+    ## Regressions:
+    ##                    Estimate  Std.Err  z-value  P(>|z|)
+    ##   depf1 ~                                             
+    ##     ses               0.115    0.063    1.832    0.067
+    ## 
+    ## Intercepts:
+    ##                    Estimate  Std.Err  z-value  P(>|z|)
+    ##    .revsum9           2.978    0.035   85.689    0.000
+    ##    .housing           0.562    0.021   26.869    0.000
+    ##    .owner             0.244    0.018   13.460    0.000
+    ##    .sumses33          4.323    0.076   56.623    0.000
+    ##    .bdiq2             0.360    0.029   12.340    0.000
+    ##    .bdiq3             0.429    0.032   13.295    0.000
+    ##    .bdiq4             0.612    0.037   16.758    0.000
+    ##    .bdiq5             0.379    0.029   13.054    0.000
+    ##    .bdiq6             0.404    0.034   11.898    0.000
+    ##    .bdiq7             0.416    0.033   12.598    0.000
+    ##    .bdiq8             0.571    0.041   13.850    0.000
+    ##    .bdiq10            0.488    0.038   12.964    0.000
+    ##    .bdiq12            0.483    0.032   14.970    0.000
+    ##    .bdiq13            0.423    0.031   13.485    0.000
+    ##    .bdiq14            0.331    0.029   11.256    0.000
+    ##    .bdiq15            0.467    0.032   14.788    0.000
+    ##    .bdiq17            0.442    0.032   13.991    0.000
+    ##    .bdiq20            0.529    0.035   15.270    0.000
+    ##    .bdiq21            0.642    0.045   14.193    0.000
+    ##    .bdiq22_1          0.038    0.008    4.674    0.000
+    ##    .bdiq23_1          0.016    0.005    3.027    0.002
+    ##    .bdiq24_1          0.005    0.003    1.739    0.082
+    ##    .bdiq25_1          0.004    0.003    1.418    0.156
+    ##     ses               0.000                           
+    ##    .depf1             0.000                           
+    ## 
+    ## Variances:
+    ##                    Estimate  Std.Err  z-value  P(>|z|)
+    ##    .revsum9           0.554    0.035   15.986    0.000
+    ##    .housing           0.051    0.017    3.054    0.002
+    ##    .owner             0.173    0.010   16.534    0.000
+    ##    .sumses33          1.394    0.179    7.777    0.000
+    ##    .bdiq2             0.299    0.019   15.843    0.000
+    ##    .bdiq3             0.350    0.022   15.752    0.000
+    ##    .bdiq4             0.364    0.024   15.227    0.000
+    ##    .bdiq5             0.312    0.020   15.984    0.000
+    ##    .bdiq6             0.322    0.021   15.231    0.000
+    ##    .bdiq7             0.329    0.021   15.447    0.000
+    ##    .bdiq8             0.510    0.033   15.495    0.000
+    ##    .bdiq10            0.525    0.033   15.991    0.000
+    ##    .bdiq12            0.312    0.020   15.472    0.000
+    ##    .bdiq13            0.253    0.017   15.019    0.000
+    ##    .bdiq14            0.226    0.015   15.073    0.000
+    ##    .bdiq15            0.266    0.018   15.082    0.000
+    ##    .bdiq17            0.375    0.023   15.970    0.000
+    ##    .bdiq20            0.369    0.024   15.488    0.000
+    ##    .bdiq21            0.847    0.052   16.187    0.000
+    ##    .bdiq22_1          0.036    0.002   16.666    0.000
+    ##    .bdiq23_1          0.016    0.001   16.662    0.000
+    ##    .bdiq24_1          0.005    0.000   16.658    0.000
+    ##    .bdiq25_1          0.004    0.000   16.675    0.000
+    ##     ses               0.122    0.025    4.823    0.000
+    ##    .depf1             0.177    0.023    7.736    0.000
+    ## 
+    ## 
+    ## Group 2 [1]:
+    ## 
+    ## Latent Variables:
+    ##                    Estimate  Std.Err  z-value  P(>|z|)
+    ##   ses =~                                              
+    ##     revsum9           1.000                           
+    ##     housing          -2.203    0.680   -3.239    0.001
+    ##     owner             0.457    0.155    2.941    0.003
+    ##     sumses33         -5.062    1.091   -4.642    0.000
+    ##   depf1 =~                                            
+    ##     bdiq2             1.000                           
+    ##     bdiq3             1.052    0.099   10.644    0.000
+    ##     bdiq4             1.052    0.098   10.708    0.000
+    ##     bdiq5             0.889    0.084   10.598    0.000
+    ##     bdiq6             1.301    0.127   10.202    0.000
+    ##     bdiq7             0.963    0.092   10.526    0.000
+    ##     bdiq8             1.365    0.125   10.949    0.000
+    ##     bdiq10            1.254    0.144    8.712    0.000
+    ##     bdiq12            1.054    0.103   10.187    0.000
+    ##     bdiq13            1.109    0.109   10.144    0.000
+    ##     bdiq14            0.992    0.093   10.652    0.000
+    ##     bdiq15            0.751    0.093    8.058    0.000
+    ##     bdiq17            0.783    0.097    8.050    0.000
+    ##     bdiq20            0.602    0.094    6.425    0.000
+    ##     bdiq21            0.660    0.115    5.753    0.000
+    ##     bdiq22_1          0.315    0.045    7.064    0.000
+    ##     bdiq23_1          0.267    0.039    6.885    0.000
+    ##     bdiq24_1          0.206    0.036    5.664    0.000
+    ##     bdiq25_1          0.230    0.037    6.170    0.000
+    ## 
+    ## Regressions:
+    ##                    Estimate  Std.Err  z-value  P(>|z|)
+    ##   depf1 ~                                             
+    ##     ses               0.024    0.104    0.228    0.819
+    ## 
+    ## Intercepts:
+    ##                    Estimate  Std.Err  z-value  P(>|z|)
+    ##    .revsum9           2.515    0.043   58.603    0.000
+    ##    .housing           0.697    0.022   32.416    0.000
+    ##    .owner             0.471    0.023   20.169    0.000
+    ##    .sumses33          5.327    0.072   74.087    0.000
+    ##    .bdiq2             0.357    0.033   10.873    0.000
+    ##    .bdiq3             0.386    0.035   10.998    0.000
+    ##    .bdiq4             0.557    0.034   16.177    0.000
+    ##    .bdiq5             0.432    0.029   14.939    0.000
+    ##    .bdiq6             0.522    0.045   11.700    0.000
+    ##    .bdiq7             0.333    0.032   10.407    0.000
+    ##    .bdiq8             0.478    0.043   11.216    0.000
+    ##    .bdiq10            0.694    0.051   13.488    0.000
+    ##    .bdiq12            0.518    0.035   14.584    0.000
+    ##    .bdiq13            0.555    0.038   14.448    0.000
+    ##    .bdiq14            0.331    0.032   10.204    0.000
+    ##    .bdiq15            0.726    0.034   21.245    0.000
+    ##    .bdiq17            0.840    0.035   23.693    0.000
+    ##    .bdiq20            0.877    0.035   24.849    0.000
+    ##    .bdiq21            0.932    0.044   21.174    0.000
+    ##    .bdiq22_1          0.150    0.017    8.948    0.000
+    ##    .bdiq23_1          0.108    0.015    7.417    0.000
+    ##    .bdiq24_1          0.097    0.014    6.984    0.000
+    ##    .bdiq25_1          0.101    0.014    7.159    0.000
+    ##     ses               0.000                           
+    ##    .depf1             0.000                           
+    ## 
+    ## Variances:
+    ##                    Estimate  Std.Err  z-value  P(>|z|)
+    ##    .revsum9           0.793    0.054   14.658    0.000
+    ##    .housing           0.000    0.037    0.004    0.997
+    ##    .owner             0.240    0.016   15.097    0.000
+    ##    .sumses33          1.233    0.211    5.832    0.000
+    ##    .bdiq2             0.313    0.023   13.824    0.000
+    ##    .bdiq3             0.363    0.026   13.872    0.000
+    ##    .bdiq4             0.342    0.025   13.823    0.000
+    ##    .bdiq5             0.239    0.017   13.822    0.000
+    ##    .bdiq6             0.604    0.043   14.010    0.000
+    ##    .bdiq7             0.301    0.022   13.904    0.000
+    ##    .bdiq8             0.494    0.036   13.641    0.000
+    ##    .bdiq10            0.923    0.064   14.418    0.000
+    ##    .bdiq12            0.375    0.027   13.931    0.000
+    ##    .bdiq13            0.452    0.032   14.025    0.000
+    ##    .bdiq14            0.304    0.022   13.814    0.000
+    ##    .bdiq15            0.431    0.030   14.562    0.000
+    ##    .bdiq17            0.463    0.032   14.560    0.000
+    ##    .bdiq20            0.503    0.034   14.807    0.000
+    ##    .bdiq21            0.805    0.054   14.889    0.000
+    ##    .bdiq22_1          0.109    0.007   14.704    0.000
+    ##    .bdiq23_1          0.083    0.006   14.732    0.000
+    ##    .bdiq24_1          0.080    0.005   14.856    0.000
+    ##    .bdiq25_1          0.081    0.005   14.827    0.000
+    ##     ses               0.043    0.022    1.993    0.046
+    ##    .depf1             0.180    0.027    6.702    0.000
+
+Mediation analysis
+
+``` r
+model <- 'ses =~ revsum9 + housing + ethnicity + owner + sumses33
+depf1 =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1
+trauf =~ ipvq1 + ipvq2 + ipvq3 + ipvq4 + ipvq5 + ipvq6 + ipvq7 + ipvq8 + ipvq9 + ipvq10 + ipvq11 + ipvq12 + ipvq13 + ipvq14 + ipvq15
+
+depf1 ~ b*trauf + c*ses
+trauf ~ a*ses
+
+indirect := a*b
+total := c + (a*b)
+'
+
+fit <- sem(model, drak_clean, "bootstrap")
+```
+
+    ## Warning in lav_partable_check(lavpartable, categorical =
+    ## lavoptions$categorical, : lavaan WARNING: parameter table does not contain
+    ## thresholds
+
+    ## Warning in lav_samplestats_from_data(lavdata = lavdata, missing = lavoptions$missing, : lavaan WARNING: number of observations (799) too small to compute Gamma
+
+    ## Warning in lav_model_vcov(lavmodel = lavmodel, lavsamplestats = lavsamplestats, : lavaan WARNING:
+    ##     The variance-covariance matrix of the estimated parameters (vcov)
+    ##     does not appear to be positive definite! The smallest eigenvalue
+    ##     (= -3.221134e-17) is smaller than zero. This may be a symptom that
+    ##     the model is not identified.
+
+``` r
+summary(fit)
+```
+
+    ## lavaan 0.6-3 ended normally after 76 iterations
+    ## 
+    ##   Optimization method                           NLMINB
+    ##   Number of free parameters                        120
+    ## 
+    ##                                                   Used       Total
+    ##   Number of observations                           799        1018
+    ## 
+    ##   Estimator                                       DWLS      Robust
+    ##   Model Fit Test Statistic                    1936.556    1553.205
+    ##   Degrees of freedom                               699         699
+    ##   P-value (Chi-square)                           0.000       0.000
+    ##   Scaling correction factor                                  1.732
+    ##   Shift parameter                                          434.887
+    ##     for simple second-order correction (Mplus variant)
+    ## 
+    ## Parameter Estimates:
+    ## 
+    ##   Information                                 Expected
+    ##   Information saturated (h1) model        Unstructured
+    ##   Standard Errors                           Robust.sem
+    ## 
+    ## Latent Variables:
+    ##                    Estimate  Std.Err  z-value  P(>|z|)
+    ##   ses =~                                              
+    ##     revsum9           1.000                           
+    ##     housing          -0.886    0.087  -10.147    0.000
+    ##     ethnicity        -0.582    0.066   -8.856    0.000
+    ##     owner            -0.226    0.053   -4.299    0.000
+    ##     sumses33         -4.181    0.442   -9.450    0.000
+    ##   depf1 =~                                            
+    ##     bdiq2             1.000                           
+    ##     bdiq3             1.116    0.092   12.126    0.000
+    ##     bdiq4             1.228    0.116   10.539    0.000
+    ##     bdiq5             0.944    0.094   10.091    0.000
+    ##     bdiq6             1.451    0.127   11.439    0.000
+    ##     bdiq7             1.072    0.102   10.486    0.000
+    ##     bdiq8             1.467    0.140   10.464    0.000
+    ##     bdiq10            1.245    0.132    9.399    0.000
+    ##     bdiq12            1.234    0.128    9.649    0.000
+    ##     bdiq13            1.258    0.121   10.377    0.000
+    ##     bdiq14            1.136    0.102   11.185    0.000
+    ##     bdiq15            1.099    0.114    9.635    0.000
+    ##     bdiq17            1.000    0.124    8.061    0.000
+    ##     bdiq20            1.024    0.110    9.275    0.000
+    ##     bdiq21            1.045    0.124    8.458    0.000
+    ##     bdiq22_1          0.182    0.035    5.198    0.000
+    ##     bdiq23_1          0.155    0.032    4.807    0.000
+    ##     bdiq24_1          0.098    0.025    3.879    0.000
+    ##     bdiq25_1          0.116    0.028    4.082    0.000
+    ##   trauf =~                                            
+    ##     ipvq1             1.000                           
+    ##     ipvq2             0.807    0.051   15.825    0.000
+    ##     ipvq3             0.860    0.056   15.378    0.000
+    ##     ipvq4             0.842    0.054   15.551    0.000
+    ##     ipvq5            -0.414    0.022  -18.553    0.000
+    ##     ipvq6             0.836    0.059   14.286    0.000
+    ##     ipvq7             0.840    0.061   13.673    0.000
+    ##     ipvq8             0.627    0.059   10.629    0.000
+    ##     ipvq9             0.615    0.058   10.543    0.000
+    ##     ipvq10            0.307    0.046    6.646    0.000
+    ##     ipvq11           -0.336    0.026  -13.122    0.000
+    ##     ipvq12            0.431    0.055    7.868    0.000
+    ##     ipvq13            0.457    0.054    8.529    0.000
+    ##     ipvq14            0.165    0.039    4.201    0.000
+    ##     ipvq15           -0.250    0.024  -10.232    0.000
+    ## 
+    ## Regressions:
+    ##                    Estimate  Std.Err  z-value  P(>|z|)
+    ##   depf1 ~                                             
+    ##     trauf      (b)    0.161    0.030    5.350    0.000
+    ##     ses        (c)    0.094    0.049    1.934    0.053
+    ##   trauf ~                                             
+    ##     ses        (a)   -0.164    0.083   -1.969    0.049
+    ## 
+    ## Intercepts:
+    ##                    Estimate  Std.Err  z-value  P(>|z|)
+    ##    .revsum9           2.747    0.032   85.198    0.000
+    ##    .housing           0.645    0.017   38.040    0.000
+    ##    .ethnicity         0.472    0.018   26.700    0.000
+    ##    .owner             0.312    0.016   19.007    0.000
+    ##    .sumses33          4.767    0.062   76.738    0.000
+    ##    .bdiq2             0.372    0.024   15.377    0.000
+    ##    .bdiq3             0.446    0.028   16.182    0.000
+    ##    .bdiq4             0.658    0.029   22.544    0.000
+    ##    .bdiq5             0.451    0.024   18.709    0.000
+    ##    .bdiq6             0.493    0.031   15.716    0.000
+    ##    .bdiq7             0.409    0.027   15.318    0.000
+    ##    .bdiq8             0.584    0.035   16.929    0.000
+    ##    .bdiq10            0.637    0.036   17.649    0.000
+    ##    .bdiq12            0.551    0.028   19.593    0.000
+    ##    .bdiq13            0.514    0.027   18.835    0.000
+    ##    .bdiq14            0.359    0.025   14.201    0.000
+    ##    .bdiq15            0.636    0.027   23.196    0.000
+    ##    .bdiq17            0.677    0.028   24.260    0.000
+    ##    .bdiq20            0.746    0.029   25.504    0.000
+    ##    .bdiq21            0.844    0.037   22.896    0.000
+    ##    .bdiq22_1          0.096    0.010    9.225    0.000
+    ##    .bdiq23_1          0.066    0.009    7.530    0.000
+    ##    .bdiq24_1          0.055    0.008    6.820    0.000
+    ##    .bdiq25_1          0.054    0.008    6.737    0.000
+    ##    .ipvq1             1.726    0.035   49.314    0.000
+    ##    .ipvq2             1.427    0.030   47.995    0.000
+    ##    .ipvq3             1.422    0.030   47.268    0.000
+    ##    .ipvq4             1.365    0.029   46.951    0.000
+    ##    .ipvq5             1.676    0.017  101.143    0.000
+    ##    .ipvq6             1.680    0.032   52.048    0.000
+    ##    .ipvq7             1.528    0.031   49.041    0.000
+    ##    .ipvq8             1.272    0.025   50.891    0.000
+    ##    .ipvq9             1.257    0.024   51.855    0.000
+    ##    .ipvq10            1.121    0.017   66.886    0.000
+    ##    .ipvq11            1.712    0.016  106.824    0.000
+    ##    .ipvq12            1.159    0.020   59.389    0.000
+    ##    .ipvq13            1.179    0.020   58.226    0.000
+    ##    .ipvq14            1.055    0.012   91.070    0.000
+    ##    .ipvq15            1.884    0.011  165.918    0.000
+    ##     ses               0.000                           
+    ##    .depf1             0.000                           
+    ##    .trauf             0.000                           
+    ## 
+    ## Variances:
+    ##                    Estimate  Std.Err  z-value  P(>|z|)
+    ##    .revsum9           0.691    0.038   17.958    0.000
+    ##    .housing           0.120    0.010   11.650    0.000
+    ##    .ethnicity         0.202    0.007   27.823    0.000
+    ##    .owner             0.208    0.006   32.324    0.000
+    ##    .sumses33          0.638    0.166    3.851    0.000
+    ##    .bdiq2             0.303    0.026   11.857    0.000
+    ##    .bdiq3             0.402    0.031   13.039    0.000
+    ##    .bdiq4             0.434    0.035   12.269    0.000
+    ##    .bdiq5             0.317    0.024   12.969    0.000
+    ##    .bdiq6             0.441    0.036   12.133    0.000
+    ##    .bdiq7             0.382    0.031   12.496    0.000
+    ##    .bdiq8             0.599    0.046   13.061    0.000
+    ##    .bdiq10            0.787    0.053   14.859    0.000
+    ##    .bdiq12            0.382    0.031   12.479    0.000
+    ##    .bdiq13            0.337    0.033   10.218    0.000
+    ##    .bdiq14            0.299    0.027   10.893    0.000
+    ##    .bdiq15            0.402    0.029   13.879    0.000
+    ##    .bdiq17            0.458    0.032   14.232    0.000
+    ##    .bdiq20            0.511    0.034   14.956    0.000
+    ##    .bdiq21            0.906    0.048   19.061    0.000
+    ##    .bdiq22_1          0.082    0.008   10.699    0.000
+    ##    .bdiq23_1          0.058    0.007    8.545    0.000
+    ##    .bdiq24_1          0.051    0.007    7.452    0.000
+    ##    .bdiq25_1          0.049    0.007    7.427    0.000
+    ##    .ipvq1             0.421    0.038   11.100    0.000
+    ##    .ipvq2             0.343    0.031   10.989    0.000
+    ##    .ipvq3             0.311    0.029   10.635    0.000
+    ##    .ipvq4             0.280    0.027   10.349    0.000
+    ##    .ipvq5             0.124    0.007   16.509    0.000
+    ##    .ipvq6             0.442    0.036   12.197    0.000
+    ##    .ipvq7             0.382    0.036   10.560    0.000
+    ##    .ipvq8             0.280    0.026   10.779    0.000
+    ##    .ipvq9             0.258    0.023   10.998    0.000
+    ##    .ipvq10            0.172    0.024    7.164    0.000
+    ##    .ipvq11            0.142    0.008   16.827    0.000
+    ##    .ipvq12            0.200    0.023    8.613    0.000
+    ##    .ipvq13            0.211    0.022    9.697    0.000
+    ##    .ipvq14            0.092    0.022    4.135    0.000
+    ##    .ipvq15            0.068    0.006   11.289    0.000
+    ##     ses               0.140    0.026    5.297    0.000
+    ##    .depf1             0.149    0.024    6.303    0.000
+    ##    .trauf             0.554    0.053   10.384    0.000
+    ## 
+    ## Defined Parameters:
+    ##                    Estimate  Std.Err  z-value  P(>|z|)
+    ##     indirect         -0.026    0.013   -1.996    0.046
+    ##     total             0.068    0.050    1.361    0.174
+
+Tried doing this a different way. Recoding ethnicity to 0 (Black) and 1 (Coloured). Recoding clinic to 0 (Mbekweni) and 1 (TC Newman). Recode everything as poverty, not SES (sumses9, SESaQ31\_1, sumses33, SESaQ34\_1). Filtered out moms whose housing is "Other" Recoding housing to 1 (shack, wendy house/backyard dwelling) and 0 (house or flat). Recoding owner to 1 (informal, rent) and 0 (own). Hypothesis: increase poverty, increase BDI
+
+``` r
+drak_clean_pov = drak %>% 
+  mutate(ethnicity = as.numeric(ethnicity > 1),
+         clinic = as.numeric(Clinic > 1),
+         bdi = bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1,
+         revsum33 = 9 - sumses33) %>% 
+  filter(SESaQ31_1 != 6,
+         SESaQ34_1 != 4) %>% 
+  mutate(housing = as.numeric(SESaQ31_1 < 3),
+         owner = as.numeric(SESaQ34_1 > 1),
+         ses = sumses9 + housing + owner + revsum33) %>% 
+  select(-Clinic)
+```
+
+``` r
+nomed_mod_cl <- 'pov =~ sumses9 + housing + owner + revsum33 
+depf1 =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1
+
+depf1 ~ pov '
+
+nomed_mod_fit_cl <- sem(nomed_mod_cl, data = drak_clean_pov, missing = 'fiml.x', group = "clinic")
+summary(nomed_mod_fit_cl)
+```
+
+    ## lavaan 0.6-3 ended normally after 124 iterations
+    ## 
+    ##   Optimization method                           NLMINB
+    ##   Number of free parameters                        140
+    ## 
+    ##   Number of observations per group         
+    ##   0                                                562
+    ##   1                                                456
+    ##   Number of missing patterns per group     
+    ##   0                                                 14
+    ##   1                                                  5
+    ## 
+    ##   Estimator                                         ML
+    ##   Model Fit Test Statistic                    1622.401
+    ##   Degrees of freedom                               458
+    ##   P-value (Chi-square)                           0.000
+    ## 
+    ## Chi-square for each group:
+    ## 
+    ##   0                                            894.117
+    ##   1                                            728.283
+    ## 
+    ## Parameter Estimates:
+    ## 
+    ##   Information                                 Observed
+    ##   Observed information based on                Hessian
+    ##   Standard Errors                             Standard
+    ## 
+    ## 
+    ## Group 1 [0]:
+    ## 
+    ## Latent Variables:
+    ##                    Estimate  Std.Err  z-value  P(>|z|)
+    ##   pov =~                                              
+    ##     sumses9           1.000                           
+    ##     housing          -1.264    0.145   -8.738    0.000
+    ##     owner            -0.304    0.063   -4.840    0.000
+    ##     revsum33         -3.921    0.435   -9.017    0.000
+    ##   depf1 =~                                            
+    ##     bdiq2             1.000                           
+    ##     bdiq3             1.139    0.089   12.839    0.000
+    ##     bdiq4             1.466    0.106   13.894    0.000
+    ##     bdiq5             0.942    0.080   11.801    0.000
+    ##     bdiq6             1.343    0.097   13.777    0.000
+    ##     bdiq7             1.255    0.094   13.373    0.000
+    ##     bdiq8             1.567    0.117   13.384    0.000
+    ##     bdiq10            1.225    0.103   11.854    0.000
+    ##     bdiq12            1.229    0.092   13.427    0.000
+    ##     bdiq13            1.287    0.091   14.146    0.000
+    ##     bdiq14            1.197    0.085   14.144    0.000
+    ##     bdiq15            1.276    0.092   13.928    0.000
+    ##     bdiq17            1.011    0.087   11.663    0.000
+    ##     bdiq20            1.299    0.099   13.165    0.000
+    ##     bdiq21            1.282    0.122   10.521    0.000
+    ##     bdiq22_1          0.056    0.020    2.792    0.005
+    ##     bdiq23_1          0.040    0.013    3.028    0.002
+    ##     bdiq24_1          0.018    0.008    2.336    0.019
+    ##     bdiq25_1          0.014    0.006    2.171    0.030
+    ## 
+    ## Regressions:
+    ##                    Estimate  Std.Err  z-value  P(>|z|)
+    ##   depf1 ~                                             
+    ##     pov              -0.115    0.063   -1.832    0.067
+    ## 
+    ## Intercepts:
+    ##                    Estimate  Std.Err  z-value  P(>|z|)
+    ##    .sumses9           2.022    0.035   58.169    0.000
+    ##    .housing           0.438    0.021   20.917    0.000
+    ##    .owner             0.756    0.018   41.754    0.000
+    ##    .revsum33          4.677    0.076   61.255    0.000
+    ##    .bdiq2             0.360    0.029   12.340    0.000
+    ##    .bdiq3             0.429    0.032   13.295    0.000
+    ##    .bdiq4             0.612    0.037   16.758    0.000
+    ##    .bdiq5             0.379    0.029   13.054    0.000
+    ##    .bdiq6             0.404    0.034   11.898    0.000
+    ##    .bdiq7             0.416    0.033   12.598    0.000
+    ##    .bdiq8             0.571    0.041   13.850    0.000
+    ##    .bdiq10            0.488    0.038   12.964    0.000
+    ##    .bdiq12            0.483    0.032   14.970    0.000
+    ##    .bdiq13            0.423    0.031   13.485    0.000
+    ##    .bdiq14            0.331    0.029   11.256    0.000
+    ##    .bdiq15            0.467    0.032   14.788    0.000
+    ##    .bdiq17            0.442    0.032   13.991    0.000
+    ##    .bdiq20            0.529    0.035   15.270    0.000
+    ##    .bdiq21            0.642    0.045   14.193    0.000
+    ##    .bdiq22_1          0.038    0.008    4.674    0.000
+    ##    .bdiq23_1          0.016    0.005    3.027    0.002
+    ##    .bdiq24_1          0.005    0.003    1.739    0.082
+    ##    .bdiq25_1          0.004    0.003    1.418    0.156
+    ##     pov               0.000                           
+    ##    .depf1             0.000                           
+    ## 
+    ## Variances:
+    ##                    Estimate  Std.Err  z-value  P(>|z|)
+    ##    .sumses9           0.554    0.035   15.986    0.000
+    ##    .housing           0.051    0.017    3.054    0.002
+    ##    .owner             0.173    0.010   16.534    0.000
+    ##    .revsum33          1.394    0.179    7.777    0.000
+    ##    .bdiq2             0.299    0.019   15.843    0.000
+    ##    .bdiq3             0.350    0.022   15.752    0.000
+    ##    .bdiq4             0.364    0.024   15.228    0.000
+    ##    .bdiq5             0.312    0.020   15.984    0.000
+    ##    .bdiq6             0.322    0.021   15.231    0.000
+    ##    .bdiq7             0.329    0.021   15.447    0.000
+    ##    .bdiq8             0.510    0.033   15.495    0.000
+    ##    .bdiq10            0.525    0.033   15.991    0.000
+    ##    .bdiq12            0.312    0.020   15.472    0.000
+    ##    .bdiq13            0.253    0.017   15.019    0.000
+    ##    .bdiq14            0.226    0.015   15.073    0.000
+    ##    .bdiq15            0.266    0.018   15.082    0.000
+    ##    .bdiq17            0.375    0.023   15.970    0.000
+    ##    .bdiq20            0.369    0.024   15.488    0.000
+    ##    .bdiq21            0.847    0.052   16.187    0.000
+    ##    .bdiq22_1          0.036    0.002   16.666    0.000
+    ##    .bdiq23_1          0.016    0.001   16.662    0.000
+    ##    .bdiq24_1          0.005    0.000   16.658    0.000
+    ##    .bdiq25_1          0.004    0.000   16.675    0.000
+    ##     pov               0.122    0.025    4.823    0.000
+    ##    .depf1             0.177    0.023    7.736    0.000
+    ## 
+    ## 
+    ## Group 2 [1]:
+    ## 
+    ## Latent Variables:
+    ##                    Estimate  Std.Err  z-value  P(>|z|)
+    ##   pov =~                                              
+    ##     sumses9           1.000                           
+    ##     housing          -2.203    0.680   -3.239    0.001
+    ##     owner             0.457    0.155    2.941    0.003
+    ##     revsum33         -5.062    1.090   -4.642    0.000
+    ##   depf1 =~                                            
+    ##     bdiq2             1.000                           
+    ##     bdiq3             1.052    0.099   10.644    0.000
+    ##     bdiq4             1.052    0.098   10.708    0.000
+    ##     bdiq5             0.889    0.084   10.598    0.000
+    ##     bdiq6             1.301    0.127   10.202    0.000
+    ##     bdiq7             0.963    0.092   10.526    0.000
+    ##     bdiq8             1.365    0.125   10.949    0.000
+    ##     bdiq10            1.254    0.144    8.712    0.000
+    ##     bdiq12            1.054    0.103   10.187    0.000
+    ##     bdiq13            1.109    0.109   10.144    0.000
+    ##     bdiq14            0.992    0.093   10.652    0.000
+    ##     bdiq15            0.751    0.093    8.058    0.000
+    ##     bdiq17            0.783    0.097    8.050    0.000
+    ##     bdiq20            0.602    0.094    6.425    0.000
+    ##     bdiq21            0.660    0.115    5.753    0.000
+    ##     bdiq22_1          0.315    0.045    7.064    0.000
+    ##     bdiq23_1          0.267    0.039    6.885    0.000
+    ##     bdiq24_1          0.206    0.036    5.664    0.000
+    ##     bdiq25_1          0.230    0.037    6.170    0.000
+    ## 
+    ## Regressions:
+    ##                    Estimate  Std.Err  z-value  P(>|z|)
+    ##   depf1 ~                                             
+    ##     pov              -0.024    0.104   -0.228    0.819
+    ## 
+    ## Intercepts:
+    ##                    Estimate  Std.Err  z-value  P(>|z|)
+    ##    .sumses9           2.485    0.043   57.923    0.000
+    ##    .housing           0.303    0.022   14.067    0.000
+    ##    .owner             0.529    0.023   22.608    0.000
+    ##    .revsum33          3.673    0.072   51.079    0.000
+    ##    .bdiq2             0.357    0.033   10.873    0.000
+    ##    .bdiq3             0.386    0.035   10.999    0.000
+    ##    .bdiq4             0.557    0.034   16.177    0.000
+    ##    .bdiq5             0.432    0.029   14.939    0.000
+    ##    .bdiq6             0.522    0.045   11.700    0.000
+    ##    .bdiq7             0.333    0.032   10.407    0.000
+    ##    .bdiq8             0.478    0.043   11.216    0.000
+    ##    .bdiq10            0.694    0.051   13.488    0.000
+    ##    .bdiq12            0.518    0.035   14.584    0.000
+    ##    .bdiq13            0.555    0.038   14.448    0.000
+    ##    .bdiq14            0.331    0.032   10.204    0.000
+    ##    .bdiq15            0.726    0.034   21.245    0.000
+    ##    .bdiq17            0.840    0.035   23.693    0.000
+    ##    .bdiq20            0.877    0.035   24.849    0.000
+    ##    .bdiq21            0.932    0.044   21.174    0.000
+    ##    .bdiq22_1          0.150    0.017    8.948    0.000
+    ##    .bdiq23_1          0.108    0.015    7.417    0.000
+    ##    .bdiq24_1          0.097    0.014    6.984    0.000
+    ##    .bdiq25_1          0.101    0.014    7.159    0.000
+    ##     pov               0.000                           
+    ##    .depf1             0.000                           
+    ## 
+    ## Variances:
+    ##                    Estimate  Std.Err  z-value  P(>|z|)
+    ##    .sumses9           0.793    0.054   14.658    0.000
+    ##    .housing           0.000    0.037    0.004    0.997
+    ##    .owner             0.240    0.016   15.097    0.000
+    ##    .revsum33          1.233    0.211    5.831    0.000
+    ##    .bdiq2             0.313    0.023   13.824    0.000
+    ##    .bdiq3             0.363    0.026   13.872    0.000
+    ##    .bdiq4             0.342    0.025   13.823    0.000
+    ##    .bdiq5             0.239    0.017   13.822    0.000
+    ##    .bdiq6             0.604    0.043   14.010    0.000
+    ##    .bdiq7             0.301    0.022   13.904    0.000
+    ##    .bdiq8             0.494    0.036   13.641    0.000
+    ##    .bdiq10            0.923    0.064   14.418    0.000
+    ##    .bdiq12            0.375    0.027   13.931    0.000
+    ##    .bdiq13            0.452    0.032   14.025    0.000
+    ##    .bdiq14            0.304    0.022   13.814    0.000
+    ##    .bdiq15            0.431    0.030   14.562    0.000
+    ##    .bdiq17            0.463    0.032   14.560    0.000
+    ##    .bdiq20            0.503    0.034   14.807    0.000
+    ##    .bdiq21            0.805    0.054   14.889    0.000
+    ##    .bdiq22_1          0.109    0.007   14.704    0.000
+    ##    .bdiq23_1          0.083    0.006   14.732    0.000
+    ##    .bdiq24_1          0.080    0.005   14.856    0.000
+    ##    .bdiq25_1          0.081    0.005   14.827    0.000
+    ##     pov               0.043    0.022    1.993    0.046
+    ##    .depf1             0.180    0.027    6.702    0.000
