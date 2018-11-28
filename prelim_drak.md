@@ -1962,7 +1962,8 @@ drak_clean = drak %>%
   filter(SESaQ31_1 != 6,
          SESaQ34_1 != 4) %>% 
   mutate(housing = as.numeric(SESaQ31_1 > 2),
-         owner = as.numeric(SESaQ34_1 == 1)) %>% 
+         owner = as.numeric(SESaQ34_1 == 1),
+         ses = revsum9 + housing + owner + sumses33) %>% 
   select(-Clinic)
   
   drak_clean %>% 
@@ -1973,3 +1974,20 @@ drak_clean = drak %>%
 ```
 
 ![](prelim_drak_files/figure-markdown_github/drak_clean-1.png)
+
+``` r
+drak_clean %>% 
+  group_by(clinic) %>% 
+  ggplot(aes(x = ses, y = bdi, color = ethnicity)) + 
+    geom_point() +
+    geom_smooth() +
+    facet_grid(~ clinic)
+```
+
+    ## `geom_smooth()` using method = 'loess' and formula 'y ~ x'
+
+    ## Warning: Removed 26 rows containing non-finite values (stat_smooth).
+
+    ## Warning: Removed 26 rows containing missing values (geom_point).
+
+![](prelim_drak_files/figure-markdown_github/drak_clean_plot-1.png)
