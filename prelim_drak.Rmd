@@ -287,3 +287,25 @@ summary(fit)
   
 ```
 
+Tried doing this a different way.
+Recoding ethnicity to 0 (Black) and 1 (Coloured). 
+Recoding clinic to 0 (Mbekweni) and 1 (TC Newman).
+Recode everything as poverty, not SES (sumses9, SESaQ31_1, sumses33, SESaQ34_1).
+Filtered out moms whose housing is "Other"
+Recoding housing to 1 (shack, wendy house/backyard dwelling) and 0 (house or flat).
+Recoding owner to 1 (informal, rent) and 0 (own).
+Hypothesis: increase poverty, increase BDI
+```{r}
+drak_clean_pov = drak %>% 
+  mutate(ethnicity = as.numeric(ethnicity > 1),
+         clinic = as.numeric(Clinic > 1),
+         bdi = bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1,
+         revsum9 = 5 - sumses9) %>% 
+  filter(SESaQ31_1 != 6,
+         SESaQ34_1 != 4) %>% 
+  mutate(housing = as.numeric(SESaQ31_1 > 2),
+         owner = as.numeric(SESaQ34_1 == 1),
+         ses = revsum9 + housing + owner + sumses33) %>% 
+  select(-Clinic)
+```
+
