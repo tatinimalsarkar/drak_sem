@@ -1951,4 +1951,25 @@ drak %>%
 
 ![](prelim_drak_files/figure-markdown_github/drak_dep_sumses33-1.png)
 
-Recoding ethnicity to 0 and 1. Recoding clinic to 0 and 1. Recode SES into the same direction? (reverse some stuff, probably)
+Recoding ethnicity to 0 (Black) and 1 (Coloured). Recoding clinic to 0 (Mbekweni) and 1 (TC Newman). Recode everything as SES, not poverty (sumses9, SESaQ31\_1, sumses33, SESaQ34\_1). Filtered out moms whose housing is "Other" Recoding housing to 0 (shack, wendy house/backyard dwelling) and 1 (house or flat). Recoding owner to 0 (informal, rent) and 1 (own). Hypothesis: increase SES, decrease BDI
+
+``` r
+drak_clean = drak %>% 
+  mutate(ethnicity = as.numeric(ethnicity > 1),
+         clinic = as.numeric(Clinic > 1),
+         bdi = bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1,
+         revsum9 = 5 - sumses9) %>% 
+  filter(SESaQ31_1 != 6,
+         SESaQ34_1 != 4) %>% 
+  mutate(housing = as.numeric(SESaQ31_1 > 2),
+         owner = as.numeric(SESaQ34_1 == 1)) %>% 
+  select(-Clinic)
+  
+  drak_clean %>% 
+    group_by(clinic, owner) %>% 
+    summarize(n = n()) %>% 
+    ggplot(aes(x = owner, y = n, color = clinic)) +
+    geom_point()
+```
+
+![](prelim_drak_files/figure-markdown_github/drak_clean-1.png)
