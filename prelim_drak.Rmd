@@ -319,3 +319,28 @@ nomed_mod_fit_cl <- sem(nomed_mod_cl, data = drak_clean_pov, missing = 'fiml.x',
 summary(nomed_mod_fit_cl)
 ```
 
+Dummy variables for SES (categorical; reference = 0 <= ses <= 4; 
+group 1 = 4 < ses <= 8; 
+group 2 = 8 < ses <= 12;
+group 3 = 12 < ses <= 16)
+```{r drak_clean_cat}
+drak_clean_cat = drak_clean %>% 
+  mutate(ses1 = ifelse(ses > 4 & ses <= 8, 1, 0),
+         ses2 = ifelse(ses > 8 & ses <= 12, 1, 0),
+         ses3 = ifelse(ses > 12 & ses <= 16, 1, 0)) 
+
+model <- 'ses =~ ses1 + ses2 + ses3
+depf1 =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1
+trauf =~ ipvq1 + ipvq2 + ipvq3 + ipvq4 + ipvq5 + ipvq6 + ipvq7 + ipvq8 + ipvq9 + ipvq10 + ipvq11 + ipvq12 + ipvq13 + ipvq14 + ipvq15
+
+depf1 ~ b*trauf + c*ses
+trauf ~ a*ses
+
+indirect := a*b
+total := c + (a*b)
+'
+
+fit <- sem(model, drak_clean_cat, "bootstrap")
+summary(fit)
+```
+

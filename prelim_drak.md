@@ -2656,3 +2656,199 @@ summary(nomed_mod_fit_cl)
     ##    .bdiq25_1          0.081    0.005   14.827    0.000
     ##     pov               0.043    0.022    1.993    0.046
     ##    .depf1             0.180    0.027    6.702    0.000
+
+Dummy variables for SES (categorical; reference = 0 &lt;= ses &lt;= 4; group 1 = 4 &lt; ses &lt;= 8; group 2 = 8 &lt; ses &lt;= 12; group 3 = 12 &lt; ses &lt;= 16)
+
+``` r
+drak_clean_cat = drak_clean %>% 
+  mutate(ses1 = ifelse(ses > 4 & ses <= 8, 1, 0),
+         ses2 = ifelse(ses > 8 & ses <= 12, 1, 0),
+         ses3 = ifelse(ses > 12 & ses <= 16, 1, 0)) 
+
+model <- 'ses =~ ses1 + ses2 + ses3
+depf1 =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1
+trauf =~ ipvq1 + ipvq2 + ipvq3 + ipvq4 + ipvq5 + ipvq6 + ipvq7 + ipvq8 + ipvq9 + ipvq10 + ipvq11 + ipvq12 + ipvq13 + ipvq14 + ipvq15
+
+depf1 ~ b*trauf + c*ses
+trauf ~ a*ses
+
+indirect := a*b
+total := c + (a*b)
+'
+
+fit <- sem(model, drak_clean_cat, "bootstrap")
+```
+
+    ## Warning in lav_partable_check(lavpartable, categorical =
+    ## lavoptions$categorical, : lavaan WARNING: parameter table does not contain
+    ## thresholds
+
+    ## Warning in lavaan::lavaan(model = model, data = drak_clean_cat, ordered =
+    ## "bootstrap", : lavaan WARNING: the optimizer warns that a solution has NOT
+    ## been found!
+
+``` r
+summary(fit)
+```
+
+    ## lavaan 0.6-3 did NOT end normally after 8244 iterations
+    ## ** WARNING ** Estimates below are most likely unreliable
+    ## 
+    ##   Optimization method                           NLMINB
+    ##   Number of free parameters                        114
+    ## 
+    ##                                                   Used       Total
+    ##   Number of observations                           799        1018
+    ## 
+    ##   Estimator                                       DWLS
+    ##   Model Fit Test Statistic                          NA
+    ##   Degrees of freedom                                NA
+    ##   P-value                                           NA
+    ## 
+    ## Parameter Estimates:
+    ## 
+    ##   Information                                 Expected
+    ##   Information saturated (h1) model        Unstructured
+    ##   Standard Errors                           Robust.sem
+    ## 
+    ## Latent Variables:
+    ##                    Estimate  Std.Err  z-value  P(>|z|)
+    ##   ses =~                                              
+    ##     ses1              1.000                           
+    ##     ses2            107.130       NA                  
+    ##     ses3              0.029       NA                  
+    ##   depf1 =~                                            
+    ##     bdiq2             1.000                           
+    ##     bdiq3             1.114       NA                  
+    ##     bdiq4             1.226       NA                  
+    ##     bdiq5             0.948       NA                  
+    ##     bdiq6             1.455       NA                  
+    ##     bdiq7             1.072       NA                  
+    ##     bdiq8             1.462       NA                  
+    ##     bdiq10            1.254       NA                  
+    ##     bdiq12            1.236       NA                  
+    ##     bdiq13            1.260       NA                  
+    ##     bdiq14            1.133       NA                  
+    ##     bdiq15            1.102       NA                  
+    ##     bdiq17            1.006       NA                  
+    ##     bdiq20            1.028       NA                  
+    ##     bdiq21            1.048       NA                  
+    ##     bdiq22_1          0.184       NA                  
+    ##     bdiq23_1          0.158       NA                  
+    ##     bdiq24_1          0.099       NA                  
+    ##     bdiq25_1          0.118       NA                  
+    ##   trauf =~                                            
+    ##     ipvq1             1.000                           
+    ##     ipvq2             0.807       NA                  
+    ##     ipvq3             0.859       NA                  
+    ##     ipvq4             0.841       NA                  
+    ##     ipvq5            -0.415       NA                  
+    ##     ipvq6             0.839       NA                  
+    ##     ipvq7             0.844       NA                  
+    ##     ipvq8             0.632       NA                  
+    ##     ipvq9             0.617       NA                  
+    ##     ipvq10            0.310       NA                  
+    ##     ipvq11           -0.339       NA                  
+    ##     ipvq12            0.434       NA                  
+    ##     ipvq13            0.456       NA                  
+    ##     ipvq14            0.167       NA                  
+    ##     ipvq15           -0.252       NA                  
+    ## 
+    ## Regressions:
+    ##                    Estimate  Std.Err  z-value  P(>|z|)
+    ##   depf1 ~                                             
+    ##     trauf      (b)    0.158       NA                  
+    ##     ses        (c)    0.072       NA                  
+    ##   trauf ~                                             
+    ##     ses        (a)    0.037       NA                  
+    ## 
+    ## Intercepts:
+    ##                    Estimate  Std.Err  z-value  P(>|z|)
+    ##    .ses1              0.442       NA                  
+    ##    .ses2              0.524       NA                  
+    ##    .ses3              0.013       NA                  
+    ##    .bdiq2             0.372       NA                  
+    ##    .bdiq3             0.446       NA                  
+    ##    .bdiq4             0.658       NA                  
+    ##    .bdiq5             0.451       NA                  
+    ##    .bdiq6             0.493       NA                  
+    ##    .bdiq7             0.409       NA                  
+    ##    .bdiq8             0.584       NA                  
+    ##    .bdiq10            0.637       NA                  
+    ##    .bdiq12            0.551       NA                  
+    ##    .bdiq13            0.514       NA                  
+    ##    .bdiq14            0.359       NA                  
+    ##    .bdiq15            0.636       NA                  
+    ##    .bdiq17            0.677       NA                  
+    ##    .bdiq20            0.746       NA                  
+    ##    .bdiq21            0.844       NA                  
+    ##    .bdiq22_1          0.096       NA                  
+    ##    .bdiq23_1          0.066       NA                  
+    ##    .bdiq24_1          0.055       NA                  
+    ##    .bdiq25_1          0.054       NA                  
+    ##    .ipvq1             1.726       NA                  
+    ##    .ipvq2             1.427       NA                  
+    ##    .ipvq3             1.422       NA                  
+    ##    .ipvq4             1.365       NA                  
+    ##    .ipvq5             1.676       NA                  
+    ##    .ipvq6             1.680       NA                  
+    ##    .ipvq7             1.528       NA                  
+    ##    .ipvq8             1.272       NA                  
+    ##    .ipvq9             1.257       NA                  
+    ##    .ipvq10            1.121       NA                  
+    ##    .ipvq11            1.712       NA                  
+    ##    .ipvq12            1.159       NA                  
+    ##    .ipvq13            1.179       NA                  
+    ##    .ipvq14            1.055       NA                  
+    ##    .ipvq15            1.884       NA                  
+    ##     ses               0.000                           
+    ##    .depf1             0.000                           
+    ##    .trauf             0.000                           
+    ## 
+    ## Variances:
+    ##                    Estimate  Std.Err  z-value  P(>|z|)
+    ##    .ses1              0.249       NA                  
+    ##    .ses2             25.101       NA                  
+    ##    .ses3              0.012       NA                  
+    ##    .bdiq2             0.304       NA                  
+    ##    .bdiq3             0.403       NA                  
+    ##    .bdiq4             0.436       NA                  
+    ##    .bdiq5             0.317       NA                  
+    ##    .bdiq6             0.441       NA                  
+    ##    .bdiq7             0.383       NA                  
+    ##    .bdiq8             0.603       NA                  
+    ##    .bdiq10            0.784       NA                  
+    ##    .bdiq12            0.382       NA                  
+    ##    .bdiq13            0.337       NA                  
+    ##    .bdiq14            0.302       NA                  
+    ##    .bdiq15            0.402       NA                  
+    ##    .bdiq17            0.457       NA                  
+    ##    .bdiq20            0.511       NA                  
+    ##    .bdiq21            0.905       NA                  
+    ##    .bdiq22_1          0.082       NA                  
+    ##    .bdiq23_1          0.058       NA                  
+    ##    .bdiq24_1          0.050       NA                  
+    ##    .bdiq25_1          0.049       NA                  
+    ##    .ipvq1             0.424       NA                  
+    ##    .ipvq2             0.345       NA                  
+    ##    .ipvq3             0.314       NA                  
+    ##    .ipvq4             0.284       NA                  
+    ##    .ipvq5             0.124       NA                  
+    ##    .ipvq6             0.441       NA                  
+    ##    .ipvq7             0.381       NA                  
+    ##    .ipvq8             0.278       NA                  
+    ##    .ipvq9             0.258       NA                  
+    ##    .ipvq10            0.171       NA                  
+    ##    .ipvq11            0.142       NA                  
+    ##    .ipvq12            0.200       NA                  
+    ##    .ipvq13            0.213       NA                  
+    ##    .ipvq14            0.092       NA                  
+    ##    .ipvq15            0.068       NA                  
+    ##     ses              -0.002       NA                  
+    ##    .depf1             0.150       NA                  
+    ##    .trauf             0.554       NA                  
+    ## 
+    ## Defined Parameters:
+    ##                    Estimate  Std.Err  z-value  P(>|z|)
+    ##     indirect          0.006                           
+    ##     total             0.078
