@@ -118,6 +118,27 @@ summary(fit)
 
 # Plot of CTQ by SES category
 ```{r drak_plot}
+drak_plot = drak %>% 
+  mutate(ctq = ctq1 + ctq3 + ctq4 + ctq6 + ctq8 + ctq9 + ctq11 + ctq14 + ctq20 + ctq23,
+         ses = housing + owner + sumses33 + school + job + aid + ownincome + houseincome,
+         ses1 = ses <= 5,
+         ses2 = ses > 5 & ses <= 10,
+         ses3 = ses > 10 & ses <= 15,
+         ses4 = ses > 15 & ses <= 20,
+         ses5 = ses > 20 & ses <= 25,
+         ses6 = ses > 25) %>%
+  gather(ses1:ses6, key = "sescat", value = "bin") %>% 
+  filter(bin == TRUE) %>% 
+  select(-bin) %>% 
+  group_by(sescat) %>% 
+  summarize(mean_ctq = mean(ctq, na.rm = TRUE),
+            sd_ctq = sd(ctq, na.rm = TRUE)) %>% 
+  ungroup() %>% 
+  ggplot(aes(x = sescat, y = mean_ctq)) + 
+  geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin = mean_ctq - sd_ctq, ymax = mean_ctq + sd_ctq), width = 0.2) +
+  labs(x = "Category of socioeconomic status",
+       y = "Childhood trauma")
 
 ```
 
