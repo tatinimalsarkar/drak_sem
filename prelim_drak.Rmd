@@ -319,6 +319,24 @@ nomed_mod_fit_cl <- sem(nomed_mod_cl, data = drak_clean_pov, missing = 'fiml.x',
 summary(nomed_mod_fit_cl)
 ```
 
+Mediation analysis
+```{r drak_med}
+model <- 'pov =~ sumses9 + housing + owner + revsum33
+depf1 =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1
+trauf =~ ipvq1 + ipvq2 + ipvq3 + ipvq4 + ipvq5 + ipvq6 + ipvq7 + ipvq8 + ipvq9 + ipvq10 + ipvq11 + ipvq12 + ipvq13 + ipvq14 + ipvq15
+
+depf1 ~ b*trauf + c*pov
+trauf ~ a*pov
+
+indirect := a*b
+total := c + (a*b)
+'
+
+fit <- sem(model, drak_clean_pov, "bootstrap")
+summary(fit)
+  
+```
+
 Dummy variables for SES (categorical; reference = 0 <= ses <= 4; 
 group 1 = 4 < ses <= 8; 
 group 2 = 8 < ses <= 12;
@@ -341,6 +359,172 @@ total := c + (a*b)
 '
 
 fit <- sem(model, drak_clean_cat, "bootstrap")
+summary(fit)
+```
+
+Restrict to moms in Mbekweni?
+```{r restrict}
+drak_blmbek = drak_clean %>% 
+  mutate(kids = 5 - SESaQ1,
+         people = 20 - SESaQ2,
+         adults = 3 - SESaQ3_1,
+         school = SESaQ14 - 2,
+         job = 6 - SESaQ15_1,
+         aid = 1 - SESaQ16,
+         ownincome = SESaQ18,
+         houseincome = SESaQ19,
+         ipvq1 = ipvq1 - 1,
+         ipvq2 = ipvq2 - 1,
+         ipvq3 = ipvq3 - 1,
+         ipvq4 = ipvq4 - 1,
+         ipvq5 = ifelse(ipvq5 == 2, 0, ipvq5),
+         ipvq6 = ipvq6 - 1,
+         ipvq7 = ipvq7 - 1,
+         ipvq8 = ipvq8 - 1,
+         ipvq9 = ipvq9 - 1,
+         ipvq10 = ipvq10 - 1,
+         ipvq11 = ifelse(ipvq11 == 2, 0, ipvq11),
+         ipvq12 = ipvq12 - 1,
+         ipvq13 = ipvq13 - 1,
+         ipvq14 = ipvq14 - 1,
+         ipvq15 = ifelse(ipvq15 == 2, 0, ipvq15)
+         ) %>%
+  filter(clinic == 0,
+         job != -3,
+         ownincome != 99,
+         ownincome != 9999,
+         houseincome != 99,
+         houseincome != 9999) %>% 
+  mutate(ses = housing + owner + sumses33 + school + job + aid + ownincome + houseincome,
+         bdi = bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1)
+
+ggplot(drak_blmbek, aes(x = ses, y = bdi), color = ethnicity) + 
+  geom_point() + 
+  geom_smooth()
+```
+
+```{r drak_blmbek_nomed}
+nomed_mod_cl <- 'ses =~ housing + owner + sumses33 + school + job + aid + ownincome + houseincome 
+depf1 =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1
+
+depf1 ~ ses '
+
+nomed_mod_fit_cl <- sem(nomed_mod_cl, data = drak_blmbek, missing = 'fiml.x')
+summary(nomed_mod_fit_cl)
+```
+
+```{r med}
+model <- 'ses =~ housing + owner + sumses33 + school + job + aid + ownincome + houseincome
+depf1 =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1
+trauf =~ ipvq1 + ipvq2 + ipvq3 + ipvq4 + ipvq5 + ipvq6 + ipvq7 + ipvq8 + ipvq9 + ipvq10 + ipvq11 + ipvq12 + ipvq13 + ipvq14 + ipvq15
+
+depf1 ~ b*trauf + c*ses
+trauf ~ a*ses
+
+indirect := a*b
+total := c + (a*b)
+'
+
+fit <- sem(model, drak_blmbek, missing = 'fiml.x')
+summary(fit)
+```
+
+Stratifying by clinic, but including both
+```{r restrict_total}
+drak_new = drak_clean %>% 
+  mutate(kids = 5 - SESaQ1,
+         people = 20 - SESaQ2,
+         adults = 3 - SESaQ3_1,
+         school = SESaQ14 - 2,
+         job = 6 - SESaQ15_1,
+         aid = 1 - SESaQ16,
+         ownincome = SESaQ18,
+         houseincome = SESaQ19,
+         ipvq1 = ipvq1 - 1,
+         ipvq2 = ipvq2 - 1,
+         ipvq3 = ipvq3 - 1,
+         ipvq4 = ipvq4 - 1,
+         ipvq5 = ifelse(ipvq5 == 2, 0, ipvq5),
+         ipvq6 = ipvq6 - 1,
+         ipvq7 = ipvq7 - 1,
+         ipvq8 = ipvq8 - 1,
+         ipvq9 = ipvq9 - 1,
+         ipvq10 = ipvq10 - 1,
+         ipvq11 = ifelse(ipvq11 == 2, 0, ipvq11),
+         ipvq12 = ipvq12 - 1,
+         ipvq13 = ipvq13 - 1,
+         ipvq14 = ipvq14 - 1,
+         ipvq15 = ifelse(ipvq15 == 2, 0, ipvq15)
+         ) %>%
+  filter(
+         job != -3,
+         ownincome != 99,
+         ownincome != 9999,
+         houseincome != 99,
+         houseincome != 9999) %>% 
+  mutate(ses = housing + owner + sumses33 + school + job + aid + ownincome + houseincome,
+         bdi = bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1)
+```
+
+No mediator
+```{r drak_new_nomed}
+nomed_mod_cl <- 'ses =~ housing + owner + sumses33 + school + job + aid + ownincome + houseincome 
+depf1 =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1
+
+depf1 ~ ses '
+
+nomed_mod_fit_cl <- sem(nomed_mod_cl, data = drak_new, missing = 'fiml.x', group = "clinic")
+summary(nomed_mod_fit_cl)
+```
+
+Including mediator
+```{r med}
+model <- 'ses =~ housing + owner + sumses33 + school + job + aid + ownincome + houseincome
+depf1 =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1
+trauf =~ ipvq1 + ipvq2 + ipvq3 + ipvq4 + ipvq5 + ipvq6 + ipvq7 + ipvq8 + ipvq9 + ipvq10 + ipvq11 + ipvq12 + ipvq13 + ipvq14 + ipvq15
+
+depf1 ~ b*trauf + c*ses
+trauf ~ a*ses
+
+indirect := a*b
+total := c + (a*b)
+'
+
+fit <- sem(model, drak_new, missing = 'fiml.x', group = "clinic")
+summary(fit)
+```
+
+Try again to get IPV valence correct
+```{r}
+model <- 'ses =~ housing + owner + sumses33 + school + job + aid + ownincome + houseincome
+depf1 =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1
+trauf =~ ipvq1 + ipvq2 + ipvq3 + ipvq10 + ipvq12 + ipvq13 + ipvq14
+
+depf1 ~ b*trauf + c*ses
+trauf ~ a*ses
+
+indirect := a*b
+total := c + (a*b)
+'
+
+fit <- sem(model, drak_new, missing = 'fiml.x', group = "clinic")
+summary(fit)
+```
+
+Try it with childhood trauma
+```{r}
+model <- 'ses =~ housing + owner + sumses33 + school + job + aid + ownincome + houseincome
+depf1 =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1
+trauf =~ ctq1 + ctq3 + ctq4 + ctq6 + ctq8 + ctq9 + ctq11 + ctq14 + ctq20 + ctq23 
+
+depf1 ~ b*trauf + c*ses
+trauf ~ a*ses
+
+indirect := a*b
+total := c + (a*b)
+'
+
+fit <- sem(model, drak_new, missing = 'fiml.x', group = "clinic")
 summary(fit)
 ```
 

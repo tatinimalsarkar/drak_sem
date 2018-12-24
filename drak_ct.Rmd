@@ -1,0 +1,123 @@
+---
+title: "drak_ct"
+author: "Tatini Mal-Sarkar"
+date: "12/24/2018"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(lavaan)
+library(semPlot)
+library(ggridges)
+library(dplyr)
+```
+
+# Loading the data
+```{r drak_load}
+drak = read_csv("/Users/tatinimal-sarkar/Documents/mph2/practicum/thesis/data/KerryDataRequestV2_visit1_c.csv") %>% 
+  select(-ASSIST_Tobacco_Score:-opioids_preg_any,
+         -AQ1a:-AQ14b,
+         -pdiq1_afr:-pdiq13_xho,
+         -leq1_1_afr:-leq51_2_xho,
+         -ipvq1_afr:-ipvq17_xho,
+         -epdsq1_afr:-epdsq10_xho,
+         -bdiq1_afr:-bdiq25_2_xho,
+         -srqq1_afr:-srqq20_xho) %>% 
+  mutate(ethnicity = as.numeric(ethnicity > 1),
+         clinic = as.numeric(Clinic > 1),
+         bdi = bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1,
+         revsum9 = 5 - sumses9) %>% 
+  filter(SESaQ31_1 != 6,
+         SESaQ34_1 != 4) %>% 
+  mutate(housing = as.numeric(SESaQ31_1 > 2),
+         owner = as.numeric(SESaQ34_1 == 1),
+         ses = revsum9 + housing + owner + sumses33) %>% 
+  select(-Clinic) %>% 
+  mutate(kids = 5 - SESaQ1,
+         people = 20 - SESaQ2,
+         adults = 3 - SESaQ3_1,
+         school = SESaQ14 - 2,
+         job = 6 - SESaQ15_1,
+         aid = 1 - SESaQ16,
+         ownincome = SESaQ18,
+         houseincome = SESaQ19,
+         ipvq1 = ipvq1 - 1,
+         ipvq2 = ipvq2 - 1,
+         ipvq3 = ipvq3 - 1,
+         ipvq4 = ipvq4 - 1,
+         ipvq5 = ifelse(ipvq5 == 2, 0, ipvq5),
+         ipvq6 = ipvq6 - 1,
+         ipvq7 = ipvq7 - 1,
+         ipvq8 = ipvq8 - 1,
+         ipvq9 = ipvq9 - 1,
+         ipvq10 = ipvq10 - 1,
+         ipvq11 = ifelse(ipvq11 == 2, 0, ipvq11),
+         ipvq12 = ipvq12 - 1,
+         ipvq13 = ipvq13 - 1,
+         ipvq14 = ipvq14 - 1,
+         ipvq15 = ifelse(ipvq15 == 2, 0, ipvq15)
+         ) %>%
+  filter(
+         job != -3,
+         ownincome != 99,
+         ownincome != 9999,
+         houseincome != 99,
+         houseincome != 9999) %>% 
+  mutate(ses = housing + owner + sumses33 + school + job + aid + ownincome + houseincome,
+         bdi = bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1)
+```
+
+# Socioeconomic status and depression
+```{r drak_nomed}
+model <- 'ses =~ housing + owner + sumses33 + school + job + aid + ownincome + houseincome 
+depf1 =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1
+
+depf1 ~ ses '
+
+fit <- sem(model, data = drak, missing = 'fiml.x', group = "clinic")
+summary(fit)
+```
+
+# Socioeconomic status, depression, and 1-factor childhood trauma
+```{r drak_med}
+model <- 'ses =~ housing + owner + sumses33 + school + job + aid + ownincome + houseincome
+depf1 =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1
+trauf =~ ctq1 + ctq3 + ctq4 + ctq6 + ctq8 + ctq9 + ctq11 + ctq14 + ctq20 + ctq23 
+
+depf1 ~ b*trauf + c*ses
+trauf ~ a*ses
+
+indirect := a*b
+total := c + (a*b)
+'
+
+fit <- sem(model, drak, missing = 'fiml.x', group = "clinic")
+summary(fit)
+```
+
+# Socioeconomic status, depression, and 2-factor childhood trauma
+```{r drak_med_2}
+model <- 'ses =~ housing + owner + sumses33 + school + job + aid + ownincome + houseincome
+depf1 =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1
+trauf1 =~ ctq3 + ctq4 + ctq8 + ctq9 + ctq11 + ctq12 + ctq14 + ctq15 + ctq17 + ctq18+ ctq25 
+trauf2 =~ ctq20 + ctq21 + ctq23 + ctq24 + ctq27
+
+depf1 ~ c*trauf1 + d*trauf2 + e*ses
+trauf1 ~ a*ses 
+trauf2 ~ b*ses
+
+indirect := a*c + b*d
+total := e + (a*c + b*d)
+'
+
+fit <- sem(model, drak, missing = 'fiml.x', group = "clinic")
+summary(fit)
+```
+
+# Plot of CTQ by SES category
+```{r drak_plot}
+
+```
+
