@@ -2027,3 +2027,553 @@ exp(cbind(OR = coef(mylogit), confint(mylogit)))
     ## ses                     0.8808373 0.80839442 0.9571057
     ## ctq                     1.0331579 1.01529679 1.0502372
     ## mother_age_at_enrolment 0.9868606 0.93279659 1.0409884
+
+Logistic regression of severe depression on SES, adjusted for emotional neglect and age
+=======================================================================================
+
+not meaningful
+
+``` r
+drak_log = drak %>% 
+  mutate(bdiq16 = as.numeric(str_sub(bdiq16, 0, 1)),
+         bdiq18 = as.numeric(str_sub(bdiq18, 0, 1)),
+         bdi = bdiq1 + bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq9 + bdiq10 + bdiq11 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq16 + bdiq17 + bdiq18 + bdiq19 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1,
+         dep = bdi > 32,
+         ctq2rev = 6 - ctq2,
+         ctq5rev = 6 - ctq5,
+         ctq7rev = 6 - ctq7,
+         ctq10rev = 6 - ctq10,
+         ctq13rev = 6 - ctq13,
+         ctq16rev = 6 - ctq16,
+         ctq19rev = 6 - ctq19,
+         ctq22rev = 6 - ctq22,
+         ctq26rev = 6 - ctq26,
+         ctq28rev = 6 - ctq28,
+         emoneg = ctq13rev + ctq7rev + ctq5rev + ctq19rev + ctq28rev,
+         ses = housing + owner + sumses33 + school + job + aid + ownincome + houseincome)
+
+mylogit = glm(dep ~ ses + emoneg + mother_age_at_enrolment, data = drak_log, family = "binomial")
+
+summary(mylogit)
+```
+
+    ## 
+    ## Call:
+    ## glm(formula = dep ~ ses + emoneg + mother_age_at_enrolment, family = "binomial", 
+    ##     data = drak_log)
+    ## 
+    ## Deviance Residuals: 
+    ##     Min       1Q   Median       3Q      Max  
+    ## -0.8156  -0.3454  -0.2770  -0.2192   2.9179  
+    ## 
+    ## Coefficients:
+    ##                         Estimate Std. Error z value Pr(>|z|)    
+    ## (Intercept)             -1.39412    0.98581  -1.414 0.157310    
+    ## ses                     -0.13930    0.04227  -3.296 0.000982 ***
+    ## emoneg                   0.10244    0.03139   3.264 0.001100 ** 
+    ## mother_age_at_enrolment -0.02328    0.02762  -0.843 0.399383    
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## (Dispersion parameter for binomial family taken to be 1)
+    ## 
+    ##     Null deviance: 366.79  on 934  degrees of freedom
+    ## Residual deviance: 345.91  on 931  degrees of freedom
+    ##   (31 observations deleted due to missingness)
+    ## AIC: 353.91
+    ## 
+    ## Number of Fisher Scoring iterations: 6
+
+``` r
+confint(mylogit)
+```
+
+    ## Waiting for profiling to be done...
+
+    ##                               2.5 %      97.5 %
+    ## (Intercept)             -3.33289087  0.53988609
+    ## ses                     -0.22375107 -0.05763635
+    ## emoneg                   0.03881422  0.16263937
+    ## mother_age_at_enrolment -0.07918753  0.02949451
+
+``` r
+exp(coef(mylogit))
+```
+
+    ##             (Intercept)                     ses                  emoneg 
+    ##               0.2480523               0.8699660               1.1078738 
+    ## mother_age_at_enrolment 
+    ##               0.9769916
+
+``` r
+exp(cbind(OR = coef(mylogit), confint(mylogit)))
+```
+
+    ## Waiting for profiling to be done...
+
+    ##                                OR      2.5 %    97.5 %
+    ## (Intercept)             0.2480523 0.03568978 1.7158114
+    ## ses                     0.8699660 0.79951413 0.9439932
+    ## emoneg                  1.1078738 1.03957733 1.1766123
+    ## mother_age_at_enrolment 0.9769916 0.92386666 1.0299338
+
+Logistic regression of severe depression on SES, adjusted for emotional abuse and age
+=====================================================================================
+
+ok
+
+``` r
+drak_log = drak %>% 
+  mutate(bdiq16 = as.numeric(str_sub(bdiq16, 0, 1)),
+         bdiq18 = as.numeric(str_sub(bdiq18, 0, 1)),
+         bdi = bdiq1 + bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq9 + bdiq10 + bdiq11 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq16 + bdiq17 + bdiq18 + bdiq19 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1,
+         dep = bdi > 32,
+         ctq2rev = 6 - ctq2,
+         ctq5rev = 6 - ctq5,
+         ctq7rev = 6 - ctq7,
+         ctq10rev = 6 - ctq10,
+         ctq13rev = 6 - ctq13,
+         ctq16rev = 6 - ctq16,
+         ctq19rev = 6 - ctq19,
+         ctq22rev = 6 - ctq22,
+         ctq26rev = 6 - ctq26,
+         ctq28rev = 6 - ctq28,
+         emoabu = ctq18 + ctq14 + ctq25 + ctq3 + ctq8,
+         ses = housing + owner + sumses33 + school + job + aid + ownincome + houseincome)
+
+mylogit = glm(dep ~ ses + emoabu + mother_age_at_enrolment, data = drak_log, family = "binomial")
+
+summary(mylogit)
+```
+
+    ## 
+    ## Call:
+    ## glm(formula = dep ~ ses + emoabu + mother_age_at_enrolment, family = "binomial", 
+    ##     data = drak_log)
+    ## 
+    ## Deviance Residuals: 
+    ##     Min       1Q   Median       3Q      Max  
+    ## -1.1507  -0.3428  -0.2690  -0.2169   2.9113  
+    ## 
+    ## Coefficients:
+    ##                          Estimate Std. Error z value Pr(>|z|)    
+    ## (Intercept)             -1.875538   1.010735  -1.856 0.063508 .  
+    ## ses                     -0.136622   0.043597  -3.134 0.001726 ** 
+    ## emoabu                   0.114893   0.030350   3.786 0.000153 ***
+    ## mother_age_at_enrolment -0.009307   0.027983  -0.333 0.739442    
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## (Dispersion parameter for binomial family taken to be 1)
+    ## 
+    ##     Null deviance: 361.14  on 937  degrees of freedom
+    ## Residual deviance: 339.50  on 934  degrees of freedom
+    ##   (28 observations deleted due to missingness)
+    ## AIC: 347.5
+    ## 
+    ## Number of Fisher Scoring iterations: 6
+
+``` r
+confint(mylogit)
+```
+
+    ## Waiting for profiling to be done...
+
+    ##                               2.5 %      97.5 %
+    ## (Intercept)             -3.87028899  0.10146643
+    ## ses                     -0.22387445 -0.05253424
+    ## emoabu                   0.05315423  0.17303399
+    ## mother_age_at_enrolment -0.06574858  0.04436538
+
+``` r
+exp(coef(mylogit))
+```
+
+    ##             (Intercept)                     ses                  emoabu 
+    ##               0.1532725               0.8722996               1.1217539 
+    ## mother_age_at_enrolment 
+    ##               0.9907361
+
+``` r
+exp(cbind(OR = coef(mylogit), confint(mylogit)))
+```
+
+    ## Waiting for profiling to be done...
+
+    ##                                OR      2.5 %    97.5 %
+    ## (Intercept)             0.1532725 0.02085234 1.1067928
+    ## ses                     0.8722996 0.79941550 0.9488218
+    ## emoabu                  1.1217539 1.05459228 1.1889065
+    ## mother_age_at_enrolment 0.9907361 0.93636626 1.0453642
+
+Logistic regression of severe depression on SES, adjusted for sexual abuse and age
+==================================================================================
+
+ok
+
+``` r
+drak_log = drak %>% 
+  mutate(bdiq16 = as.numeric(str_sub(bdiq16, 0, 1)),
+         bdiq18 = as.numeric(str_sub(bdiq18, 0, 1)),
+         bdi = bdiq1 + bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq9 + bdiq10 + bdiq11 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq16 + bdiq17 + bdiq18 + bdiq19 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1,
+         dep = bdi > 32,
+         ctq2rev = 6 - ctq2,
+         ctq5rev = 6 - ctq5,
+         ctq7rev = 6 - ctq7,
+         ctq10rev = 6 - ctq10,
+         ctq13rev = 6 - ctq13,
+         ctq16rev = 6 - ctq16,
+         ctq19rev = 6 - ctq19,
+         ctq22rev = 6 - ctq22,
+         ctq26rev = 6 - ctq26,
+         ctq28rev = 6 - ctq28,
+         sexabu = ctq23 + ctq24 + ctq27 + ctq20 + ctq21,
+         ses = housing + owner + sumses33 + school + job + aid + ownincome + houseincome)
+
+mylogit = glm(dep ~ ses + sexabu + mother_age_at_enrolment, data = drak_log, family = "binomial")
+
+summary(mylogit)
+```
+
+    ## 
+    ## Call:
+    ## glm(formula = dep ~ ses + sexabu + mother_age_at_enrolment, family = "binomial", 
+    ##     data = drak_log)
+    ## 
+    ## Deviance Residuals: 
+    ##     Min       1Q   Median       3Q      Max  
+    ## -0.6929  -0.3505  -0.2853  -0.2378   2.8357  
+    ## 
+    ## Coefficients:
+    ##                         Estimate Std. Error z value Pr(>|z|)   
+    ## (Intercept)             -0.94156    0.97998  -0.961  0.33665   
+    ## ses                     -0.13317    0.04247  -3.135  0.00172 **
+    ## sexabu                   0.06829    0.03672   1.859  0.06297 . 
+    ## mother_age_at_enrolment -0.02486    0.02763  -0.900  0.36833   
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## (Dispersion parameter for binomial family taken to be 1)
+    ## 
+    ##     Null deviance: 367.30  on 939  degrees of freedom
+    ## Residual deviance: 353.07  on 936  degrees of freedom
+    ##   (26 observations deleted due to missingness)
+    ## AIC: 361.07
+    ## 
+    ## Number of Fisher Scoring iterations: 6
+
+``` r
+confint(mylogit)
+```
+
+    ## Waiting for profiling to be done...
+
+    ##                               2.5 %      97.5 %
+    ## (Intercept)             -2.87221698  0.97810081
+    ## ses                     -0.21800200 -0.05113783
+    ## sexabu                  -0.01221233  0.13465213
+    ## mother_age_at_enrolment -0.08079139  0.02792243
+
+``` r
+exp(coef(mylogit))
+```
+
+    ##             (Intercept)                     ses                  sexabu 
+    ##               0.3900199               0.8753175               1.0706711 
+    ## mother_age_at_enrolment 
+    ##               0.9754477
+
+``` r
+exp(cbind(OR = coef(mylogit), confint(mylogit)))
+```
+
+    ## Waiting for profiling to be done...
+
+    ##                                OR      2.5 %    97.5 %
+    ## (Intercept)             0.3900199 0.05657337 2.6594007
+    ## ses                     0.8753175 0.80412384 0.9501477
+    ## sexabu                  1.0706711 0.98786194 1.1441387
+    ## mother_age_at_enrolment 0.9754477 0.92238609 1.0283159
+
+Logistic regression for severe depression on SES, adjusted for physical neglect and age
+=======================================================================================
+
+good!
+
+``` r
+drak_log = drak %>% 
+  mutate(bdiq16 = as.numeric(str_sub(bdiq16, 0, 1)),
+         bdiq18 = as.numeric(str_sub(bdiq18, 0, 1)),
+         bdi = bdiq1 + bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq9 + bdiq10 + bdiq11 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq16 + bdiq17 + bdiq18 + bdiq19 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1,
+         dep = bdi > 32,
+         ctq2rev = 6 - ctq2,
+         ctq5rev = 6 - ctq5,
+         ctq7rev = 6 - ctq7,
+         ctq10rev = 6 - ctq10,
+         ctq13rev = 6 - ctq13,
+         ctq16rev = 6 - ctq16,
+         ctq19rev = 6 - ctq19,
+         ctq22rev = 6 - ctq22,
+         ctq26rev = 6 - ctq26,
+         ctq28rev = 6 - ctq28,
+         physneg = ctq2rev + ctq26rev + ctq6 + ctq1 + ctq4,
+         ses = housing + owner + sumses33 + school + job + aid + ownincome + houseincome)
+
+mylogit = glm(dep ~ ses + physneg + mother_age_at_enrolment, data = drak_log, family = "binomial")
+
+summary(mylogit)
+```
+
+    ## 
+    ## Call:
+    ## glm(formula = dep ~ ses + physneg + mother_age_at_enrolment, 
+    ##     family = "binomial", data = drak_log)
+    ## 
+    ## Deviance Residuals: 
+    ##     Min       1Q   Median       3Q      Max  
+    ## -0.8564  -0.3385  -0.2729  -0.2250   2.8039  
+    ## 
+    ## Coefficients:
+    ##                         Estimate Std. Error z value Pr(>|z|)   
+    ## (Intercept)             -2.19901    1.05616  -2.082  0.03734 * 
+    ## ses                     -0.11412    0.04303  -2.652  0.00800 **
+    ## physneg                  0.14101    0.04395   3.208  0.00134 **
+    ## mother_age_at_enrolment -0.01286    0.02767  -0.465  0.64218   
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## (Dispersion parameter for binomial family taken to be 1)
+    ## 
+    ##     Null deviance: 360.95  on 935  degrees of freedom
+    ## Residual deviance: 342.46  on 932  degrees of freedom
+    ##   (30 observations deleted due to missingness)
+    ## AIC: 350.46
+    ## 
+    ## Number of Fisher Scoring iterations: 6
+
+``` r
+confint(mylogit)
+```
+
+    ## Waiting for profiling to be done...
+
+    ##                               2.5 %      97.5 %
+    ## (Intercept)             -4.27744393 -0.12910192
+    ## ses                     -0.19997991 -0.03090531
+    ## physneg                  0.05210576  0.22560465
+    ## mother_age_at_enrolment -0.06879460  0.04008278
+
+``` r
+exp(coef(mylogit))
+```
+
+    ##             (Intercept)                     ses                 physneg 
+    ##               0.1109133               0.8921546               1.1514326 
+    ## mother_age_at_enrolment 
+    ##               0.9872250
+
+``` r
+exp(cbind(OR = coef(mylogit), confint(mylogit)))
+```
+
+    ## Waiting for profiling to be done...
+
+    ##                                OR      2.5 %    97.5 %
+    ## (Intercept)             0.1109133 0.01387809 0.8788844
+    ## ses                     0.8921546 0.81874720 0.9695674
+    ## physneg                 1.1514326 1.05348715 1.2530802
+    ## mother_age_at_enrolment 0.9872250 0.93351841 1.0408969
+
+Logistic regression of severe depression on SES, adjusted for physical abuse and age
+====================================================================================
+
+ok
+
+``` r
+drak_log = drak %>% 
+  mutate(bdiq16 = as.numeric(str_sub(bdiq16, 0, 1)),
+         bdiq18 = as.numeric(str_sub(bdiq18, 0, 1)),
+         bdi = bdiq1 + bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq9 + bdiq10 + bdiq11 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq16 + bdiq17 + bdiq18 + bdiq19 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1,
+         dep = bdi > 32,
+         ctq2rev = 6 - ctq2,
+         ctq5rev = 6 - ctq5,
+         ctq7rev = 6 - ctq7,
+         ctq10rev = 6 - ctq10,
+         ctq13rev = 6 - ctq13,
+         ctq16rev = 6 - ctq16,
+         ctq19rev = 6 - ctq19,
+         ctq22rev = 6 - ctq22,
+         ctq26rev = 6 - ctq26,
+         ctq28rev = 6 - ctq28,
+         physabu = ctq12 + ctq17 + ctq9 + ctq15 + ctq11,
+         ses = housing + owner + sumses33 + school + job + aid + ownincome + houseincome)
+
+mylogit = glm(dep ~ ses + physabu + mother_age_at_enrolment, data = drak_log, family = "binomial")
+
+summary(mylogit)
+```
+
+    ## 
+    ## Call:
+    ## glm(formula = dep ~ ses + physabu + mother_age_at_enrolment, 
+    ##     family = "binomial", data = drak_log)
+    ## 
+    ## Deviance Residuals: 
+    ##     Min       1Q   Median       3Q      Max  
+    ## -0.7657  -0.3391  -0.2808  -0.2338   2.8530  
+    ## 
+    ## Coefficients:
+    ##                         Estimate Std. Error z value Pr(>|z|)   
+    ## (Intercept)             -1.32116    0.99494  -1.328  0.18422   
+    ## ses                     -0.12871    0.04246  -3.031  0.00243 **
+    ## physabu                  0.08365    0.03347   2.499  0.01245 * 
+    ## mother_age_at_enrolment -0.02008    0.02729  -0.736  0.46201   
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## (Dispersion parameter for binomial family taken to be 1)
+    ## 
+    ##     Null deviance: 367.10  on 937  degrees of freedom
+    ## Residual deviance: 350.62  on 934  degrees of freedom
+    ##   (28 observations deleted due to missingness)
+    ## AIC: 358.62
+    ## 
+    ## Number of Fisher Scoring iterations: 6
+
+``` r
+confint(mylogit)
+```
+
+    ## Waiting for profiling to be done...
+
+    ##                               2.5 %      97.5 %
+    ## (Intercept)             -3.27180945  0.63695679
+    ## ses                     -0.21351677 -0.04669737
+    ## physabu                  0.01264577  0.14551065
+    ## mother_age_at_enrolment -0.07530988  0.03208572
+
+``` r
+exp(coef(mylogit))
+```
+
+    ##             (Intercept)                     ses                 physabu 
+    ##               0.2668267               0.8792304               1.0872487 
+    ## mother_age_at_enrolment 
+    ##               0.9801238
+
+``` r
+exp(cbind(OR = coef(mylogit), confint(mylogit)))
+```
+
+    ## Waiting for profiling to be done...
+
+    ##                                OR      2.5 %    97.5 %
+    ## (Intercept)             0.2668267 0.03793772 1.8907183
+    ## ses                     0.8792304 0.80773862 0.9543762
+    ## physabu                 1.0872487 1.01272607 1.1566301
+    ## mother_age_at_enrolment 0.9801238 0.92745605 1.0326060
+
+Logistic regression of severe depression on SES, adjusted for emotional abuse, sexual abuse, physical neglect, physical abuse, and age
+======================================================================================================================================
+
+``` r
+drak_log = drak %>% 
+  mutate(bdiq16 = as.numeric(str_sub(bdiq16, 0, 1)),
+         bdiq18 = as.numeric(str_sub(bdiq18, 0, 1)),
+         bdi = bdiq1 + bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq9 + bdiq10 + bdiq11 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq16 + bdiq17 + bdiq18 + bdiq19 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1,
+         dep = bdi > 32,
+         ctq2rev = 6 - ctq2,
+         ctq5rev = 6 - ctq5,
+         ctq7rev = 6 - ctq7,
+         ctq10rev = 6 - ctq10,
+         ctq13rev = 6 - ctq13,
+         ctq16rev = 6 - ctq16,
+         ctq19rev = 6 - ctq19,
+         ctq22rev = 6 - ctq22,
+         ctq26rev = 6 - ctq26,
+         ctq28rev = 6 - ctq28,
+         emoneg = ctq13rev + ctq7rev + ctq5rev + ctq19rev + ctq28rev,
+         emoabu = ctq18 + ctq14 + ctq25 + ctq3 + ctq8,
+         sexabu = ctq23 + ctq24 + ctq27 + ctq20 + ctq21,
+         physneg = ctq2rev + ctq26rev + ctq6 + ctq1 + ctq4,
+         physabu = ctq12 + ctq17 + ctq9 + ctq15 + ctq11,
+         ses = housing + owner + sumses33 + school + job + aid + ownincome + houseincome)
+
+mylogit = glm(dep ~ ses + emoneg + emoabu + physneg + physabu + sexabu + mother_age_at_enrolment, data = drak_log, family = "binomial")
+
+summary(mylogit)
+```
+
+    ## 
+    ## Call:
+    ## glm(formula = dep ~ ses + emoneg + emoabu + physneg + physabu + 
+    ##     sexabu + mother_age_at_enrolment, family = "binomial", data = drak_log)
+    ## 
+    ## Deviance Residuals: 
+    ##     Min       1Q   Median       3Q      Max  
+    ## -0.9654  -0.3355  -0.2647  -0.2098   2.8819  
+    ## 
+    ## Coefficients:
+    ##                          Estimate Std. Error z value Pr(>|z|)   
+    ## (Intercept)             -2.385455   1.071009  -2.227   0.0259 * 
+    ## ses                     -0.132287   0.044575  -2.968   0.0030 **
+    ## emoneg                   0.028247   0.043755   0.646   0.5185   
+    ## emoabu                   0.082756   0.043513   1.902   0.0572 . 
+    ## physneg                  0.063264   0.059722   1.059   0.2895   
+    ## physabu                 -0.008775   0.046308  -0.189   0.8497   
+    ## sexabu                   0.008043   0.044110   0.182   0.8553   
+    ## mother_age_at_enrolment -0.009222   0.028201  -0.327   0.7437   
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## (Dispersion parameter for binomial family taken to be 1)
+    ## 
+    ##     Null deviance: 360.15  on 927  degrees of freedom
+    ## Residual deviance: 335.73  on 920  degrees of freedom
+    ##   (38 observations deleted due to missingness)
+    ## AIC: 351.73
+    ## 
+    ## Number of Fisher Scoring iterations: 6
+
+``` r
+confint(mylogit)
+```
+
+    ## Waiting for profiling to be done...
+
+    ##                                2.5 %      97.5 %
+    ## (Intercept)             -4.494798738 -0.28642269
+    ## ses                     -0.221363737 -0.04618429
+    ## emoneg                  -0.059219240  0.11290653
+    ## emoabu                  -0.005079403  0.16645191
+    ## physneg                 -0.055964501  0.17882789
+    ## physabu                 -0.104382116  0.07826075
+    ## sexabu                  -0.086765663  0.08879295
+    ## mother_age_at_enrolment -0.066184947  0.04479562
+
+``` r
+exp(coef(mylogit))
+```
+
+    ##             (Intercept)                     ses                  emoneg 
+    ##               0.0920471               0.8760899               1.0286502 
+    ##                  emoabu                 physneg                 physabu 
+    ##               1.0862772               1.0653076               0.9912633 
+    ##                  sexabu mother_age_at_enrolment 
+    ##               1.0080759               0.9908202
+
+``` r
+exp(cbind(OR = coef(mylogit), confint(mylogit)))
+```
+
+    ## Waiting for profiling to be done...
+
+    ##                                OR      2.5 %    97.5 %
+    ## (Intercept)             0.0920471 0.01116693 0.7509451
+    ## ses                     0.8760899 0.80142512 0.9548660
+    ## emoneg                  1.0286502 0.94250011 1.1195273
+    ## emoabu                  1.0862772 0.99493348 1.1811067
+    ## physneg                 1.0653076 0.94557270 1.1958149
+    ## physabu                 0.9912633 0.90088099 1.0814046
+    ## sexabu                  1.0080759 0.91689193 1.0928544
+    ## mother_age_at_enrolment 0.9908202 0.93595775 1.0458141
