@@ -237,4 +237,3 @@ exp(coef(mylogit))
 
 exp(cbind(OR = coef(mylogit), confint(mylogit)))
 ```
-
