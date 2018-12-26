@@ -130,7 +130,43 @@ drak_plot = drak %>%
 
 ```
 
-# Socioeconomic status and 1-factor childhood trauma
+# Plot with extended CTQ
+```{r}
+drak_plot2 = drak %>% 
+  mutate(ctq2rev = 6 - ctq2,
+         ctq5rev = 6 - ctq5,
+         ctq7rev = 6 - ctq7,
+         ctq10rev = 6 - ctq10,
+         ctq13rev = 6 - ctq13,
+         ctq16rev = 6 - ctq16,
+         ctq19rev = 6 - ctq19,
+         ctq22rev = 6 - ctq22,
+         ctq26rev = 6 - ctq26,
+         ctq28rev = 6 - ctq28,
+         ctq = ctq1 + ctq2rev + ctq3 + ctq4 + ctq5rev + ctq6 + ctq7rev + ctq8 + ctq9 + ctq10rev + ctq11 + ctq12 + ctq13rev + ctq14 + ctq15 + ctq16rev + ctq17 + ctq18 + ctq19rev + ctq20 + ctq21 + ctq22rev + ctq23 + ctq24 + ctq25 + ctq26rev + ctq27 + ctq28rev,
+         ses = housing + owner + sumses33 + school + job + aid + ownincome + houseincome,
+         ses1 = ses <= 5,
+         ses2 = ses > 5 & ses <= 10,
+         ses3 = ses > 10 & ses <= 15,
+         ses4 = ses > 15 & ses <= 20,
+         ses5 = ses > 20 & ses <= 25,
+         ses6 = ses > 25) %>%
+  gather(ses1:ses6, key = "sescat", value = "bin") %>% 
+  filter(bin == TRUE) %>% 
+  select(-bin) %>% 
+  group_by(sescat) %>% 
+  summarize(mean_ctq = mean(ctq, na.rm = TRUE),
+            sd_ctq = sd(ctq, na.rm = TRUE)) %>% 
+  ungroup() %>% 
+  ggplot(aes(x = sescat, y = mean_ctq)) + 
+  geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin = mean_ctq - sd_ctq, ymax = mean_ctq + sd_ctq), width = 0.2) +
+  labs(x = "Category of socioeconomic status",
+       y = "Childhood trauma")
+```
+
+
+# Socioeconomic status and 2-factor childhood trauma
 ```{r drak_sesctq}
 model <- 'ses =~ housing + owner + sumses33 + school + job + aid + ownincome + houseincome
 trauf1 =~ ctq3 + ctq4 + ctq8 + ctq9 + ctq11 + ctq12 + ctq14 + ctq15 + ctq17 + ctq18+ ctq25 
@@ -143,7 +179,7 @@ fit <- sem(model, drak, missing = 'fiml.x', group = "clinic")
 summary(fit)
 ```
 
-# Socioeconomic status and 2-factor childhood trauma
+# Socioeconomic status and 1-factor childhood trauma
 ```{r drak_sesctq2}
 model <- 'ses =~ housing + owner + sumses33 + school + job + aid + ownincome + houseincome
 trauf =~ ctq1 + ctq3 + ctq4 + ctq6 + ctq8 + ctq9 + ctq11 + ctq14 + ctq20 + ctq23 
@@ -165,7 +201,7 @@ fit <- sem(model, drak, missing = 'fiml.x', group = "clinic")
 summary(fit)
 ```
 
-# Logistic regression of severe depression on childhood trauma, adjusted for age
+# Logistic regression of severe depression on childhood trauma, adjusted for age and clinic
 ```{r drak_depctq}
 drak_log = drak %>% 
   mutate(bdiq16 = as.numeric(str_sub(bdiq16, 0, 1)),
@@ -175,7 +211,7 @@ drak_log = drak %>%
          ctq = ctq3 + ctq4 + ctq6 + ctq8 + ctq9 + ctq11 + ctq14 + ctq20 + ctq23,
          ses = housing + owner + sumses33 + school + job + aid + ownincome + houseincome)
 
-mylogit = glm(dep ~ ctq + mother_age_at_enrolment, data = drak_log, family = "binomial")
+mylogit = glm(dep ~ ctq + mother_age_at_enrolment + clinic, data = drak_log, family = "binomial")
 
 summary(mylogit)
 
@@ -186,7 +222,7 @@ exp(coef(mylogit))
 exp(cbind(OR = coef(mylogit), confint(mylogit)))
 ```
 
-# Logistic regression of severe depression on SES, adjusted for age
+# Logistic regression of severe depression on SES, adjusted for age and clinic
 ```{r drak_depses}
 drak_log = drak %>% 
   mutate(bdiq16 = as.numeric(str_sub(bdiq16, 0, 1)),
@@ -196,7 +232,7 @@ drak_log = drak %>%
          ctq = ctq1 + ctq3 + ctq4 + ctq6 + ctq8 + ctq9 + ctq11 + ctq14 + ctq20 + ctq23,
          ses = housing + owner + sumses33 + school + job + aid + ownincome + houseincome)
 
-mylogit = glm(dep ~ ses + mother_age_at_enrolment, data = drak_log, family = "binomial")
+mylogit = glm(dep ~ ses + mother_age_at_enrolment + clinic, data = drak_log, family = "binomial")
 
 summary(mylogit)
 
@@ -207,7 +243,7 @@ exp(coef(mylogit))
 exp(cbind(OR = coef(mylogit), confint(mylogit)))
 ```
 
-# Logistic regression of severe depression on SES, adjusted for CTQ and age
+# Logistic regression of severe depression on SES, adjusted for CTQ, age, and clinic
 ```{r drak_depsesctq}
 drak_log = drak %>% 
   mutate(bdiq16 = as.numeric(str_sub(bdiq16, 0, 1)),
@@ -227,7 +263,7 @@ drak_log = drak %>%
          ctq = ctq1 + ctq2rev + ctq3 + ctq4 + ctq5rev + ctq6 + ctq7rev + ctq8 + ctq9 + ctq10rev + ctq11 + ctq12 + ctq13rev + ctq14 + ctq15 + ctq16rev + ctq17 + ctq18 + ctq19rev + ctq20 + ctq21 + ctq22rev + ctq23 + ctq24 + ctq25 + ctq26rev + ctq27 + ctq28rev,
          ses = housing + owner + sumses33 + school + job + aid + ownincome + houseincome)
 
-mylogit = glm(dep ~ ses + ctq + mother_age_at_enrolment, data = drak_log, family = "binomial")
+mylogit = glm(dep ~ ses + ctq + mother_age_at_enrolment + clinic, data = drak_log, family = "binomial")
 
 summary(mylogit)
 
@@ -238,7 +274,7 @@ exp(coef(mylogit))
 exp(cbind(OR = coef(mylogit), confint(mylogit)))
 ```
 
-# Logistic regression of severe depression on SES, adjusted for emotional neglect and age
+# Logistic regression of severe depression on SES, adjusted for emotional neglect, age, and clinic
 
 not meaningful
 ```{r}
@@ -260,7 +296,7 @@ drak_log = drak %>%
          emoneg = ctq13rev + ctq7rev + ctq5rev + ctq19rev + ctq28rev,
          ses = housing + owner + sumses33 + school + job + aid + ownincome + houseincome)
 
-mylogit = glm(dep ~ ses + emoneg + mother_age_at_enrolment, data = drak_log, family = "binomial")
+mylogit = glm(dep ~ ses + emoneg + mother_age_at_enrolment + clinic, data = drak_log, family = "binomial")
 
 summary(mylogit)
 
@@ -271,7 +307,7 @@ exp(coef(mylogit))
 exp(cbind(OR = coef(mylogit), confint(mylogit)))
 ```
 
-# Logistic regression of severe depression on SES, adjusted for emotional abuse and age
+# Logistic regression of severe depression on SES, adjusted for emotional abuse, age, and clinic
 
 ok
 ```{r}
@@ -293,7 +329,7 @@ drak_log = drak %>%
          emoabu = ctq18 + ctq14 + ctq25 + ctq3 + ctq8,
          ses = housing + owner + sumses33 + school + job + aid + ownincome + houseincome)
 
-mylogit = glm(dep ~ ses + emoabu + mother_age_at_enrolment, data = drak_log, family = "binomial")
+mylogit = glm(dep ~ ses + emoabu + mother_age_at_enrolment + clinic, data = drak_log, family = "binomial")
 
 summary(mylogit)
 
@@ -304,7 +340,7 @@ exp(coef(mylogit))
 exp(cbind(OR = coef(mylogit), confint(mylogit)))
 ```
 
-# Logistic regression of severe depression on SES, adjusted for sexual abuse and age
+# Logistic regression of severe depression on SES, adjusted for sexual abuse, age, and clinic
 
 ok
 ```{r}
@@ -326,7 +362,7 @@ drak_log = drak %>%
          sexabu = ctq23 + ctq24 + ctq27 + ctq20 + ctq21,
          ses = housing + owner + sumses33 + school + job + aid + ownincome + houseincome)
 
-mylogit = glm(dep ~ ses + sexabu + mother_age_at_enrolment, data = drak_log, family = "binomial")
+mylogit = glm(dep ~ ses + sexabu + mother_age_at_enrolment + clinic, data = drak_log, family = "binomial")
 
 summary(mylogit)
 
@@ -337,7 +373,7 @@ exp(coef(mylogit))
 exp(cbind(OR = coef(mylogit), confint(mylogit)))
 ```
 
-# Logistic regression for severe depression on SES, adjusted for physical neglect and age
+# Logistic regression for severe depression on SES, adjusted for physical neglect, age, and clinic
 
 good!
 ```{r}
@@ -359,7 +395,7 @@ drak_log = drak %>%
          physneg = ctq2rev + ctq26rev + ctq6 + ctq1 + ctq4,
          ses = housing + owner + sumses33 + school + job + aid + ownincome + houseincome)
 
-mylogit = glm(dep ~ ses + physneg + mother_age_at_enrolment, data = drak_log, family = "binomial")
+mylogit = glm(dep ~ ses + physneg + mother_age_at_enrolment + clinic, data = drak_log, family = "binomial")
 
 summary(mylogit)
 
@@ -370,7 +406,7 @@ exp(coef(mylogit))
 exp(cbind(OR = coef(mylogit), confint(mylogit)))
 ```
 
-# Logistic regression of severe depression on SES, adjusted for physical abuse and age
+# Logistic regression of severe depression on SES, adjusted for physical abuse, age, and clinic
 
 ok
 ```{r}
@@ -392,7 +428,7 @@ drak_log = drak %>%
          physabu = ctq12 + ctq17 + ctq9 + ctq15 + ctq11,
          ses = housing + owner + sumses33 + school + job + aid + ownincome + houseincome)
 
-mylogit = glm(dep ~ ses + physabu + mother_age_at_enrolment, data = drak_log, family = "binomial")
+mylogit = glm(dep ~ ses + physabu + mother_age_at_enrolment + clinic, data = drak_log, family = "binomial")
 
 summary(mylogit)
 
@@ -403,7 +439,7 @@ exp(coef(mylogit))
 exp(cbind(OR = coef(mylogit), confint(mylogit)))
 ```
 
-# Logistic regression of severe depression on SES, adjusted for emotional abuse, sexual abuse, physical neglect, physical abuse, and age
+# Logistic regression of severe depression on SES, adjusted for emotional abuse, sexual abuse, physical neglect, physical abuse, age, and clinic
 ```{r}
 drak_log = drak %>% 
   mutate(bdiq16 = as.numeric(str_sub(bdiq16, 0, 1)),
@@ -427,7 +463,141 @@ drak_log = drak %>%
          physabu = ctq12 + ctq17 + ctq9 + ctq15 + ctq11,
          ses = housing + owner + sumses33 + school + job + aid + ownincome + houseincome)
 
-mylogit = glm(dep ~ ses + emoneg + emoabu + physneg + physabu + sexabu + mother_age_at_enrolment, data = drak_log, family = "binomial")
+mylogit = glm(dep ~ ses + emoabu + physneg + emoneg + sexabu + physabu + mother_age_at_enrolment + clinic, data = drak_log, family = "binomial")
+
+summary(mylogit)
+
+confint(mylogit)
+
+exp(coef(mylogit))
+
+exp(cbind(OR = coef(mylogit), confint(mylogit)))
+```
+
+# Logistic regression of severe depression on household income, adjusted for age and clinic
+```{r}
+drak_log = drak %>% 
+  mutate(bdiq16 = as.numeric(str_sub(bdiq16, 0, 1)),
+         bdiq18 = as.numeric(str_sub(bdiq18, 0, 1)),
+         bdi = bdiq1 + bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq9 + bdiq10 + bdiq11 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq16 + bdiq17 + bdiq18 + bdiq19 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1,
+         dep = bdi > 32,
+         ctq2rev = 6 - ctq2,
+         ctq5rev = 6 - ctq5,
+         ctq7rev = 6 - ctq7,
+         ctq10rev = 6 - ctq10,
+         ctq13rev = 6 - ctq13,
+         ctq16rev = 6 - ctq16,
+         ctq19rev = 6 - ctq19,
+         ctq22rev = 6 - ctq22,
+         ctq26rev = 6 - ctq26,
+         ctq28rev = 6 - ctq28,
+         emoneg = ctq13rev + ctq7rev + ctq5rev + ctq19rev + ctq28rev,
+         emoabu = ctq18 + ctq14 + ctq25 + ctq3 + ctq8,
+         sexabu = ctq23 + ctq24 + ctq27 + ctq20 + ctq21,
+         physneg = ctq2rev + ctq26rev + ctq6 + ctq1 + ctq4,
+         physabu = ctq12 + ctq17 + ctq9 + ctq15 + ctq11,
+         ses = housing + owner + sumses33 + school + job + aid + ownincome + houseincome,
+         ses1 = ses <= 5,
+         ses2 = ses > 5 & ses <= 10,
+         ses3 = ses > 10 & ses <= 15,
+         ses4 = ses > 15 & ses <= 20,
+         ses5 = ses > 20 & ses <= 25,
+         ses6 = ses > 25) %>% 
+  gather(ses1:ses6, key = "sescat", value = "bin") %>% 
+  filter(bin == TRUE) %>% 
+  select(-bin)
+
+mylogit = glm(dep ~ houseincome + mother_age_at_enrolment + clinic, data = drak_log, family = "binomial")
+
+summary(mylogit)
+
+confint(mylogit)
+
+exp(coef(mylogit))
+
+exp(cbind(OR = coef(mylogit), confint(mylogit)))
+```
+
+# Logistic regression of severe depression on household income, adjusted for CTQ, age, and clinic
+```{r}
+drak_log = drak %>% 
+  mutate(bdiq16 = as.numeric(str_sub(bdiq16, 0, 1)),
+         bdiq18 = as.numeric(str_sub(bdiq18, 0, 1)),
+         bdi = bdiq1 + bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq9 + bdiq10 + bdiq11 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq16 + bdiq17 + bdiq18 + bdiq19 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1,
+         dep = bdi > 32,
+         ctq2rev = 6 - ctq2,
+         ctq5rev = 6 - ctq5,
+         ctq7rev = 6 - ctq7,
+         ctq10rev = 6 - ctq10,
+         ctq13rev = 6 - ctq13,
+         ctq16rev = 6 - ctq16,
+         ctq19rev = 6 - ctq19,
+         ctq22rev = 6 - ctq22,
+         ctq26rev = 6 - ctq26,
+         ctq28rev = 6 - ctq28,
+         emoneg = ctq13rev + ctq7rev + ctq5rev + ctq19rev + ctq28rev,
+         emoabu = ctq18 + ctq14 + ctq25 + ctq3 + ctq8,
+         sexabu = ctq23 + ctq24 + ctq27 + ctq20 + ctq21,
+         physneg = ctq2rev + ctq26rev + ctq6 + ctq1 + ctq4,
+         physabu = ctq12 + ctq17 + ctq9 + ctq15 + ctq11,
+         ctq = ctq1 + ctq3 + ctq4 + ctq6 + ctq8 + ctq9 + ctq11 + ctq14 + ctq20 + ctq23,
+         ses = housing + owner + sumses33 + school + job + aid + ownincome + houseincome,
+         ses1 = ses <= 5,
+         ses2 = ses > 5 & ses <= 10,
+         ses3 = ses > 10 & ses <= 15,
+         ses4 = ses > 15 & ses <= 20,
+         ses5 = ses > 20 & ses <= 25,
+         ses6 = ses > 25) %>% 
+  gather(ses1:ses6, key = "sescat", value = "bin") %>% 
+  filter(bin == TRUE) %>% 
+  select(-bin)
+
+mylogit = glm(dep ~ houseincome + ctq + mother_age_at_enrolment + clinic, data = drak_log, family = "binomial")
+
+summary(mylogit)
+
+confint(mylogit)
+
+exp(coef(mylogit))
+
+exp(cbind(OR = coef(mylogit), confint(mylogit)))
+```
+
+# Logistic regression of severe depression on household income, adjusted for physical neglect, age, and clinic
+```{r}
+drak_log = drak %>% 
+  mutate(bdiq16 = as.numeric(str_sub(bdiq16, 0, 1)),
+         bdiq18 = as.numeric(str_sub(bdiq18, 0, 1)),
+         bdi = bdiq1 + bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq9 + bdiq10 + bdiq11 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq16 + bdiq17 + bdiq18 + bdiq19 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1,
+         dep = bdi > 32,
+         ctq2rev = 6 - ctq2,
+         ctq5rev = 6 - ctq5,
+         ctq7rev = 6 - ctq7,
+         ctq10rev = 6 - ctq10,
+         ctq13rev = 6 - ctq13,
+         ctq16rev = 6 - ctq16,
+         ctq19rev = 6 - ctq19,
+         ctq22rev = 6 - ctq22,
+         ctq26rev = 6 - ctq26,
+         ctq28rev = 6 - ctq28,
+         emoneg = ctq13rev + ctq7rev + ctq5rev + ctq19rev + ctq28rev,
+         emoabu = ctq18 + ctq14 + ctq25 + ctq3 + ctq8,
+         sexabu = ctq23 + ctq24 + ctq27 + ctq20 + ctq21,
+         physneg = ctq2rev + ctq26rev + ctq6 + ctq1 + ctq4,
+         physabu = ctq12 + ctq17 + ctq9 + ctq15 + ctq11,
+         ctq = ctq1 + ctq3 + ctq4 + ctq6 + ctq8 + ctq9 + ctq11 + ctq14 + ctq20 + ctq23,
+         ses = housing + owner + sumses33 + school + job + aid + ownincome + houseincome,
+         ses1 = ses <= 5,
+         ses2 = ses > 5 & ses <= 10,
+         ses3 = ses > 10 & ses <= 15,
+         ses4 = ses > 15 & ses <= 20,
+         ses5 = ses > 20 & ses <= 25,
+         ses6 = ses > 25) %>% 
+  gather(ses1:ses6, key = "sescat", value = "bin") %>% 
+  filter(bin == TRUE) %>% 
+  select(-bin)
+
+mylogit = glm(dep ~ houseincome + physneg + mother_age_at_enrolment + clinic, data = drak_log, family = "binomial")
 
 summary(mylogit)
 
