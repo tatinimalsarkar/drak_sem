@@ -104,6 +104,23 @@ fit <- sem(model, drak, missing = 'fiml.x', group = "clinic")
 summary(fit)
 ```
 
+# Socioeconomic status, 1-factor childhood trauma, and depression (try physical neglect?)
+```{r}
+model <- 'ses =~ housing + owner + sumses33 + school + job + aid + ownincome + houseincome
+depf1 =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1
+trauf =~ ctq1 + ctq3 + ctq4 + ctq6 + ctq8 + ctq9 + ctq11 + ctq14 + ctq20 + ctq23 
+
+depf1 ~ b*trauf + c*ses
+ses ~ a*trauf
+
+indirect := a*b
+total := c + (a*b)
+'
+
+fit <- sem(model, drak, missing = 'fiml.x', group = "clinic")
+summary(fit)
+```
+
 # Plot of CTQ by SES category
 ```{r drak_plot}
 drak_plot = drak %>% 
@@ -190,16 +207,6 @@ fit <- sem(model, drak, missing = 'fiml.x', group = "clinic")
 summary(fit)
 ```
 
-# 1-factor childhood trauma and depression
-```{r drak_ctqdep}
-model <- 'depf1 =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1
-trauf =~ ctq1 + ctq3 + ctq4 + ctq6 + ctq8 + ctq9 + ctq11 + ctq14 + ctq20 + ctq23 
-
-depf1 ~ trauf '
-
-fit <- sem(model, drak, missing = 'fiml.x', group = "clinic")
-summary(fit)
-```
 
 # Cleaning dataset for logistic regressions
 ```{r}
