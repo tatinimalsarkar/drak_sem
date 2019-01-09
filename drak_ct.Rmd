@@ -104,22 +104,6 @@ fit <- sem(model, drak, missing = 'fiml.x', group = "clinic")
 summary(fit)
 ```
 
-# Socioeconomic status, 1-factor childhood trauma, and depression (try physical neglect?)
-```{r}
-model <- 'ses =~ housing + owner + sumses33 + school + job + aid + ownincome + houseincome
-depf1 =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1
-trauf =~ ctq1 + ctq3 + ctq4 + ctq6 + ctq8 + ctq9 + ctq11 + ctq14 + ctq20 + ctq23 
-
-depf1 ~ b*trauf + c*ses
-ses ~ a*trauf
-
-indirect := a*b
-total := c + (a*b)
-'
-
-fit <- sem(model, drak, missing = 'fiml.x', group = "clinic")
-summary(fit)
-```
 
 # Plot of CTQ by SES category
 ```{r drak_plot}
@@ -399,4 +383,92 @@ confint(mylogit)
 exp(coef(mylogit))
 
 exp(cbind(OR = coef(mylogit), confint(mylogit)))
+```
+
+# 1-factor childhood trauma and SES
+```{r}
+model <- 'ses =~ housing + owner + sumses33 + school + job + aid + ownincome + houseincome
+trauf =~ ctq1 + ctq3 + ctq4 + ctq6 + ctq8 + ctq9 + ctq11 + ctq14 + ctq20 + ctq23 
+
+ses ~ trauf
+'
+
+fit <- sem(model, drak_log, missing = 'fiml.x', group = "clinic")
+summary(fit)
+```
+
+# SES and depression
+```{r}
+model <- 'ses =~ housing + owner + sumses33 + school + job + aid + ownincome + houseincome
+depf1 =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1
+
+depf1 ~ ses
+'
+
+fit <- sem(model, drak_log, missing = 'fiml.x', group = "clinic")
+summary(fit)
+```
+
+# Socioeconomic status, 1-factor childhood trauma, and depression
+```{r}
+model <- 'ses =~ housing + owner + sumses33 + school + job + aid + ownincome + houseincome
+depf1 =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1
+trauf =~ ctq1 + ctq3 + ctq4 + ctq6 + ctq8 + ctq9 + ctq11 + ctq14 + ctq20 + ctq23 
+
+depf1 ~ a*trauf + b*ses
+ses ~ c*trauf
+
+indirect := b*c
+total := a + (b*c)
+'
+
+fit <- sem(model, drak_log, missing = 'fiml.x', group = "clinic")
+summary(fit)
+```
+
+# Socioeconomic status, physical neglect, and depression
+```{r}
+model <- 'ses =~ housing + owner + sumses33 + school + job + aid + ownincome + houseincome
+depf1 =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1
+physneg =~ ctq2rev + ctq26rev + ctq6 + ctq1 + ctq4
+
+depf1 ~ a*physneg + b*ses
+ses ~ c*physneg
+
+indirect := b*c
+total := a + (b*c)
+'
+
+fit <- sem(model, drak_log, missing = 'fiml.x', group = "clinic")
+summary(fit)
+```
+
+# SES and depression
+```{r}
+model <- 'ses =~ housing + owner + sumses33 + school + job + aid + ownincome + houseincome
+depf1 =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1
+trauf =~ MPSSQ1 + MPSSQ2 + MPSSQ3 + MPSSQ4 + MPSSQ5 + MPSSQ6 + MPSSQ7 + MPSSQ8 + MPSSQ9 + MPSSQ10 + MPSSQ11 + MPSSQ12 + MPSSQ13 + MPSSQ14 + MPSSQ15 + MPSSQ16 + MPSSQ17 + MPSSQ18 
+
+depf1 ~ ses
+'
+
+fit <- sem(model, drak_log, missing = 'fiml.x', group = "clinic")
+summary(fit)
+```
+
+# Socioeconomic status, PTSD, and depression
+```{r}
+model <- 'ses =~ housing + owner + sumses33 + school + job + aid + ownincome + houseincome
+depf1 =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1
+trauf =~ MPSSQ1 + MPSSQ2 + MPSSQ3 + MPSSQ4 + MPSSQ5 + MPSSQ6 + MPSSQ7 + MPSSQ8 + MPSSQ9 + MPSSQ10 + MPSSQ11 + MPSSQ12 + MPSSQ13 + MPSSQ14 + MPSSQ15 + MPSSQ16 + MPSSQ17 + MPSSQ18 
+
+depf1 ~ a*ses + b*trauf
+trauf ~ c*ses
+
+indirect := b*c
+total := a + (b*c)
+'
+
+fit <- sem(model, drak_log, missing = 'fiml.x', group = "clinic")
+summary(fit)
 ```
