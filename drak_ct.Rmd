@@ -216,6 +216,19 @@ drak_log = drak %>%
          ses = housing + owner + sumses33 + school + job + aid + ownincome + houseincome)
 ```
 
+
+# Site differences in depression, childhood trauma, SES, health risk behavior, health profile
+```{r}
+drak_log %>% 
+  group_by(clinic) %>% 
+  summarize(total = n(),
+            mild = sum(mild_dep, na.rm = TRUE),
+            moderate = sum(mod_dep, na.rm = TRUE),
+            severe = sum(sev_dep, na.rm = TRUE),
+            all = sum(all_dep, na.rm = TRUE))
+```
+
+
 # Logistic regression of severe depression on childhood trauma, adjusted for age and clinic
 ```{r}
 mylogit = glm(sev_dep ~ ctq + mother_age_at_enrolment + clinic, data = drak_log, family = "binomial")
@@ -464,6 +477,35 @@ trauf =~ MPSSQ1 + MPSSQ2 + MPSSQ3 + MPSSQ4 + MPSSQ5 + MPSSQ6 + MPSSQ7 + MPSSQ8 +
 
 depf1 ~ a*ses + b*trauf
 trauf ~ c*ses
+
+indirect := b*c
+total := a + (b*c)
+'
+
+fit <- sem(model, drak_log, missing = 'fiml.x', group = "clinic")
+summary(fit)
+```
+
+# Childhood trauma and depression (EPDS)
+```{r}
+model <- 'depf1 =~ epdsq1 + epdsq2 + epdsq3 + epdsq4 + epdsq5 + epdsq6 + epdsq7 + epdsq8 + epdsq9 + epdsq10
+trauf =~ ctq1 + ctq3 + ctq4 + ctq6 + ctq8 + ctq9 + ctq11 + ctq14 + ctq20 + ctq23 
+
+depf1 ~ trauf
+'
+
+fit <- sem(model, drak_log, missing = 'fiml.x', group = "clinic")
+summary(fit)
+```
+
+# Childhood trauma, SES, and depression (EPDS)
+```{r}
+model <- 'ses =~ housing + owner + sumses33 + school + job + aid + ownincome + houseincome
+depf1 =~ epdsq1 + epdsq2 + epdsq3 + epdsq4 + epdsq5 + epdsq6 + epdsq7 + epdsq8 + epdsq9 + epdsq10
+trauf =~ ctq1 + ctq3 + ctq4 + ctq6 + ctq8 + ctq9 + ctq11 + ctq14 + ctq20 + ctq23 
+
+depf1 ~ a*trauf + b*ses
+ses ~ c*trauf
 
 indirect := b*c
 total := a + (b*c)
