@@ -422,6 +422,47 @@ fit <- sem(model, drak_log, missing = 'fiml.x', group = "clinic")
 summary(fit)
 ```
 
+
+# SES (3-pronged) and depression
+```{r}
+model <- 'ed =~ school
+assets =~ housing + owner + sumses33
+income =~ job + aid + ownincome + houseincome
+depf1 =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1
+
+depf1 ~ a*ed + b*assets + c*income
+
+ed := a
+assets := b
+income := c
+total := a + b + c
+'
+
+fit <- sem(model, drak_log, missing = 'fiml.x', group = "clinic")
+summary(fit)
+```
+
+# SES (3-pronged), 1-factor childhood trauma, and depression
+```{r}
+model <- 'ed =~ school
+assets =~ housing + owner + sumses33
+income =~ job + aid + ownincome + houseincome
+depf1 =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1
+trauf =~ ctq1 + ctq3 + ctq4 + ctq6 + ctq8 + ctq9 + ctq11 + ctq14 + ctq20 + ctq23 
+
+depf1 ~ a*trauf + b*ed + c*assets + d*income
+ed ~ e*trauf
+assets ~ f*trauf
+income ~ g*trauf
+
+indirect := e*b + f*c + g*d
+total := a + (e*b + f*c + g*d)
+'
+
+fit <- sem(model, drak_log, missing = 'fiml.x', group = "clinic")
+summary(fit)
+```
+
 # Socioeconomic status, 1-factor childhood trauma, and depression
 ```{r}
 model <- 'ses =~ housing + owner + sumses33 + school + job + aid + ownincome + houseincome
@@ -514,3 +555,19 @@ total := a + (b*c)
 fit <- sem(model, drak_log, missing = 'fiml.x', group = "clinic")
 summary(fit)
 ```
+
+# Confirmatory factor analysis 
+```{r}
+trauma =~ ctq1 + ctq3 + ctq4 + ctq6 + ctq8 + ctq9 + ctq11 + ctq14 + ctq20 + ctq23
+ses =~ housing + owner + sumses33 + school + job + aid + ownincome + houseincome
+dep =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1
+
+HS.model <- ' trauma =~ ctq1 + ctq3 + ctq4 + ctq6 + ctq8 + ctq9 + ctq11 + ctq14 + ctq20 + ctq23
+ses =~ housing + owner + sumses33 + school + job + aid + ownincome + houseincome
+dep =~ bdiq2 + bdiq3 + bdiq4 + bdiq5 + bdiq6 + bdiq7 + bdiq8 + bdiq10 + bdiq12 + bdiq13 + bdiq14 + bdiq15 + bdiq17 + bdiq20 + bdiq21 + bdiq22_1 + bdiq23_1 + bdiq24_1 + bdiq25_1 '
+
+fit <- cfa(HS.model, data = drak_log)
+
+summary(fit, fit.measures = TRUE)
+```
+
